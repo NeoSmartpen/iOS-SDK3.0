@@ -57,8 +57,8 @@ Please contact our support team via email for the terms and conditions of this l
 Feel free to leave any comment or feedback [here](https://github.com/NeoSmartpen/IOS-SDK2.0/issues)
 
 
-### Open Source Library
-And we are using the following open sources.
+## Open Source Library
+- And we are using the following open sources.
 
 ### SWXMLHash ([https://github.com/drmohundro/SWXMLHash](https://github.com/drmohundro/SWXMLHash))
 
@@ -84,5 +84,3 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
