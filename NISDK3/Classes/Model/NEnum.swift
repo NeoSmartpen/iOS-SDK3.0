@@ -97,12 +97,7 @@ public enum PenSetupType: UInt8 {
     case PenLEDColor = 8
     /// 0 ~ 4 (0 Most Sensitive)
     case FSRStep = 9
-    /// USB Connect Interface : Disk or Bulk
-    case USBMode = 10
-    /// DownSampling on/off
-    case DownSampling = 11
-    /// Set Device LocalName
-    case LocalName = 12
+    
     /// 0 ~ 4 (0 Most Sensitive)
     case FSCStep = 13
     /// Not define from SDK

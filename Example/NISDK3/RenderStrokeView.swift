@@ -71,20 +71,14 @@ class RenderStrokeView: UIView {
         setNeedsDisplay()
     }
     
-    func pointCheck(dot:Dot) -> CGPoint{
-        let x = (dot.x - Float(self.x)) * (Float(self.frame.size.width) / Float(self.width))
-        let y = (dot.y - Float(self.y)) * (Float(self.frame.size.height) / Float(self.height))
-        
-        return CGPoint(x: CGFloat(x), y: CGFloat(y))
-    }
-    
     func refreshView(dot:[[Dot]]){
         clear()
         for dots in dot {
             setStroke(dots)
         }
     }
-
+    
+    
 }
 
 

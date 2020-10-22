@@ -450,11 +450,7 @@ public struct PenSettingStruct {
     public var offlineOnOff: OnOff = OnOff.On
     /// Pen Pressure
     public var penPressure: UInt8 = 0
-    /// USB Mode : Disk or Bulk
-    public var usbMode: USBMode = USBMode.Bulk
-    /// Down Sampling data
-    public var downSampling: OnOff = OnOff.On
-    /// loacal name
+    /// Pen LocalName
     public var localName: String = ""
     var reserved: [UInt8] = [UInt8](repeating: 0, count: 23)
     
@@ -482,8 +478,6 @@ public struct PenSettingStruct {
         battLevel = d[20] & 0x7f
         offlineOnOff = OnOff(rawValue: d[21]) ?? .Ignore
         penPressure = d[22]
-        usbMode = USBMode.init(rawValue: d[23]) ?? .Bulk
-        downSampling = OnOff(rawValue: d[24]) ?? .Ignore
         localName = toString(Array(d[25..<41]))
         reserved = Array(d[41..<64])
     }
@@ -508,14 +502,6 @@ public struct PenSettingStruct {
         case LV3 = 3
         ///Most Insensitive
         case LV4 = 4
-    }
-    
-    /// USB Mode
-    public enum USBMode: UInt8 {
-        /// Disk
-        case Disk = 0
-        /// Bulk
-        case Bulk = 1
     }
 }
 

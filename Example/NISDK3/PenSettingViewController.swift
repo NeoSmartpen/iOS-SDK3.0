@@ -87,9 +87,9 @@ class PenSettingViewController: UIViewController {
                 PenHelper.shared.pen?.requestSetPenOfflineSave(OnOff.Off)
             }
         }else if tag == 6{
-//            벌크모드 앤 디스크모드 없음????
+
         }else if tag == 7{
-//            다운로드 샘플링??????
+
         }
     }
 }
@@ -103,55 +103,55 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
         let row = indexPath.row
         let cell = tableView.dequeueReusableCell(withIdentifier: "PenSettinghCell", for: indexPath) as! PenSettinghCell
         if row == 0{
-            cell.SettingName.text = "펜 이름"
+            cell.SettingName.text = "Pen Name"
             cell.settingValue.text = "\(penStatus?.localName ?? "NeoLab Pen")"
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }else if row == 1{
-            cell.SettingName.text = "펜 자동꺼짐 시간"
-            cell.settingValue.text = "\(penStatus?.autoPwrOffTime ?? UInt16(10))분 ▼"
+            cell.SettingName.text = "Pen AutoPowerOff Time"
+            cell.settingValue.text = "\(penStatus?.autoPwrOffTime ?? UInt16(10)) minute. ▼"
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }else if row == 2{
-            cell.SettingName.text = "비밀번호 시도 횟수"
+            cell.SettingName.text = "Password Retry Count"
             cell.settingValue.text = "\(penStatus?.retryCnt ?? UInt8(0)) / \(penStatus?.maxRetryCnt ?? UInt8(10))"
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }else if row == 3{
-            cell.SettingName.text = "배터리 충전도"
+            cell.SettingName.text = "Battery level"
             cell.settingValue.text = "\(penStatus?.battLevel ?? UInt8(0))%"
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }else if row == 4{
-            cell.SettingName.text = "사용중인 메모리"
+            cell.SettingName.text = "Used Memory"
             cell.settingValue.text = "\(penStatus?.memoryUsed ?? UInt8(0))%"
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }else if row == 5{
-            cell.SettingName.text = "펜 알림 소리"
+            cell.SettingName.text = "Ben Beep"
             cell.OnOffSwitch.isOn = penStatus?.beepOnOff == OnOff.On ? true : false
             cell.OnOffSwitch.tag = 1
             cellValueHidden(cell: cell, switchHidden: false, settingValueHidden: true)
         }else if row == 6{
-            cell.SettingName.text = "펜 자동 전원"
+            cell.SettingName.text = "Pen AutoPowerOn(When PenTip Down)"
             cell.OnOffSwitch.isOn = penStatus?.usePenTipOnOff == OnOff.On ? true : false
             cell.OnOffSwitch.tag = 2
             cellValueHidden(cell: cell, switchHidden: false, settingValueHidden: true)
         }else if row == 7{
-            cell.SettingName.text = "펜 뚜껑"
+            cell.SettingName.text = "Pen Cap"
             cell.OnOffSwitch.isOn = penStatus?.usePenCapOff == OnOff.On ? true : false
             cell.OnOffSwitch.tag = 3
             cellValueHidden(cell: cell, switchHidden: false, settingValueHidden: true)
         }else if row == 8{
-            cell.SettingName.text = "펜 호버"
+            cell.SettingName.text = "Pen Hover"
             cell.OnOffSwitch.isOn = penStatus?.useHover == OnOff.On ? true : false
             cell.OnOffSwitch.tag = 4
             cellValueHidden(cell: cell, switchHidden: false, settingValueHidden: true)
         }else if row == 9{
-            cell.SettingName.text = "펜 비밀번호 설정"
+            cell.SettingName.text = "Set Pen Password"
             cell.settingValue.text = "▼"
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }else if row == 10{
-            cell.SettingName.text = "펜 오프라인 데이터"
+            cell.SettingName.text = "Pen Offline Data"
             cell.settingValue.text = "▼"
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }else if row == 11{
-            cell.SettingName.text = "펜 펌웨어 업데이트"
+            cell.SettingName.text = "Pen Firmware Update"
             cell.settingValue.text = "▼"
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
         }
@@ -186,7 +186,7 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
     }
     
     func alert(){
-        let alertController = UIAlertController(title: "비밀번호 변경", message: "비밀번호는 4자리 입니다.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Change Password", message: "The password is 4 digits.", preferredStyle: .alert)
 
         let saveAction = UIAlertAction(title: "Save", style: .default, handler: { alert -> Void in
             let firstTextField = alertController.textFields![0] as UITextField
@@ -199,13 +199,13 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
         saveAction.isEnabled = false
 
         alertController.addTextField { (textField : UITextField!) -> Void in
-            textField.placeholder = "비밀번호 입력"
+            textField.placeholder = "Input password"
             textField.keyboardType = .numberPad
             textField.isSecureTextEntry = true
         }
         
         alertController.addTextField { (textField : UITextField!) -> Void in
-            textField.placeholder = "비밀번호 재입력"
+            textField.placeholder = "Confirm password"
             textField.keyboardType = .numberPad
             textField.isSecureTextEntry = true
             

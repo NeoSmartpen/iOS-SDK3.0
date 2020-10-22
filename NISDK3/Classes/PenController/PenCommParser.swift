@@ -3,7 +3,8 @@
 //  NISDK3
 //
 //  Created by Aram Moon on 2017. 6. 8..
-//  Copyright © 2017년 Aram Moon. All rights reserved.
+//  Editted by SB KIM on 2020.10.22
+//  Copyright © 2017년 NeoLab. All rights reserved.
 //
 
 import Foundation
@@ -154,8 +155,14 @@ class PenCommParser {
                 return
             }
             let hover = DotHover.init(Array(data[pos..<pos+packetDataLength]))
-            let dot = Dot.init(hover: hover)
-            hoverData(dot)
+            
+            var dot = Dot.init(hover: hover)
+            if let page = currentPage {
+                dot.pageInfo = page
+            }
+            
+            self.hoverData(dot)
+            
         case .EVENT_PEN_UPDOWN:
             if data.count < packetDataLength + pos {
                 N.Log("Error packet length", cmd)
@@ -782,27 +789,7 @@ class PenCommParser {
         N.Log("Req setPenState 0x5 data \(data)")
         penCtrl.writePenSetData(data)
     }
-    /// [10]
-    func requestSetPenUSBMode(_ mode: PenSettingStruct.USBMode) {
-        let request = REQ.PenStatus.init(.USBMode, mode)
-        let data = request.toUInt8Array().toData()
-        N.Log("Req setPenState 0x5 data \(data)")
-        penCtrl.writePenSetData(data)
-    }
-    /// [11]
-    func requestSetPenDownSampling(_ onoff: OnOff) {
-        let request = REQ.PenStatus.init(.DownSampling, onoff)
-        let data = request.toUInt8Array().toData()
-        N.Log("Req setPenState 0x5 data \(data)")
-        penCtrl.writePenSetData(data)
-    }
-    /// [12]
-    func requestSetPenLocalname(_ name: String) {
-        let request = REQ.PenStatus.init(.LocalName, name)
-        let data = request.toUInt8Array().toData()
-        N.Log("Req setPenState 0x5 data \(data)")
-        penCtrl.writePenSetData(data)
-    }
+    
     /// [13]
     func requestSetPenFSCStep(_ pressure: UInt8){
         let request = REQ.PenStatus.init(.FSCStep,  PenSettingStruct.Sensitive(rawValue: pressure) ?? PenSettingStruct.Sensitive.Max )
@@ -976,7 +963,7 @@ class PenCommParser {
         
     }
     
-    func deleteProfile (_ proFileName: String, _ password: [UInt8] ) throws {
+    func deleteProfile (_ proFileName: String, _ password: [UInt8]) throws {
         let request = REQ.Profile.init(proFileName, password)
         let data = request.toUInt8Array().toData()
         N.Log("Req Profile 0x41 deleteProfile \(data)")
@@ -991,7 +978,7 @@ class PenCommParser {
         penCtrl.writePenSetData(data)
     }
     
-    func writeProfileValue (_ proFileName: String, _ password: [UInt8] , _  data: [String : [UInt8]] ) throws {
+    func writeProfileValue (_ proFileName: String, _ password: [UInt8] , _  data: [String : [UInt8]]) throws {
         let request = REQ.Profile.init(proFileName, password, data)
         let data = request.toUInt8Array().toData()
         N.Log("Req Profile 0x41 writeProfileValue \(data)")

@@ -22,7 +22,7 @@ enum SettingOption {
     func minSixty() -> [Any]{
         var minArr = Array<Any>()
         for i in 1..<61{
-            minArr.append("\(i)분")
+            minArr.append("\(i) minute")
         }
         return minArr
     }

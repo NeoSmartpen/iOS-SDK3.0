@@ -25,15 +25,15 @@ public struct SymbolData{
     public var cmdAction = ""
     /// Command param value
     public var cmdParam = ""
-    /// symbol 좌상단 x 좌표
+    /// symbol top-left x coordinates
     public var x: Float = 0
-    /// symbol 좌상단 y 좌표
+    /// symbol top-left y coordinates
     public var y: Float = 0
-    /// symbol 폭
+    /// symbol width
     public var width: Float = 0
-    /// symbol 높이
+    /// symbol height
     public var height: Float = 0
-    /// Symbol View 초기 Setting(ignoredProperties in Database)
+    /// Symbol View init Setting(ignoredProperties in Database)
     public var checked = true
     /// UI Event Enable(ignoredProperties in Database)
     public var isEnabled = true

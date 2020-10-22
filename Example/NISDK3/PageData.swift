@@ -15,13 +15,13 @@ public struct PageData {
     var id : String = "" // Section_Owner_note_page ex) 5_4_1_2
     /// ncode page (page Number + Start Page)
     public var pageId: Int = 0
-    /// page 좌상단 x 좌표
+    /// page top-left x coordinates
     public var x1: Float = 0
-    /// page 좌상단 y 좌표
+    /// page top-left y coordinates
     public var y1: Float = 0
-    /// page 우하단 x 좌표
+    /// page  bottom-right coordinates
     public var x2: Float = 0
-    /// page 우하단 y 좌표
+    /// page bottom-right y coordinates
     public var y2: Float = 0
     /// crop_margin value left
     public var crop_margin_left: Float = 0

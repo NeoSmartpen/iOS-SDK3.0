@@ -1,6 +1,6 @@
 //
 //  ScaleHelper.swift
-//  SampleRemake
+//  NISDK3
 //
 //  Created by KIM SONGBONG on 2020/02/25.
 //  Copyright © 2020 KIM SONGBONG. All rights reserved.

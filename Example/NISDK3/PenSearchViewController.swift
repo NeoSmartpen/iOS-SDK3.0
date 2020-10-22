@@ -93,21 +93,21 @@ class PenSearchViewController: UIViewController ,UIGestureRecognizerDelegate{
     }
     
     func alert(){
-        let alertController = UIAlertController(title: "비밀번호 입력", message: "비밀번호는 4자리 입니다.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Please Input Password", message: "The password is 4 digits.", preferredStyle: .alert)
 
-            let saveAction = UIAlertAction(title: "확인", style: .default, handler: { alert -> Void in
+            let saveAction = UIAlertAction(title: "OK", style: .default, handler: { alert -> Void in
                 let firstTextField = alertController.textFields![0] as UITextField
                 PenHelper.shared.pen?.requestComparePassword(firstTextField.text!)
             })
 
-            let cancelAction = UIAlertAction(title: "취소", style: .default, handler:{ alert -> Void in
+            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler:{ alert -> Void in
                 PenHelper.shared.connectDelegate?(false)
             })
             
             saveAction.isEnabled = false
 
             alertController.addTextField { (textField : UITextField!) -> Void in
-                textField.placeholder = "비밀번호 입력"
+                textField.placeholder = "Input Password"
                 textField.keyboardType = .numberPad
                 textField.isSecureTextEntry = true
             }

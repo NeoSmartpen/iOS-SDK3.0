@@ -24,6 +24,11 @@ class PageStrokeView: UIView {
     var width:Double = 0.0
     var height:Double = 0.0
     
+    //HoverView
+    var hoverLayer: CAShapeLayer!
+    var hoverPath: UIBezierPath!
+    private var hoverRadius = CGFloat(5)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         viewinit()
@@ -44,20 +49,26 @@ class PageStrokeView: UIView {
         shapelayer.fillColor = UIColor.clear.cgColor
         shapelayer.lineCap = kCALineCapRound
         layer.addSublayer(shapelayer)
+        
+        //HoverView
+        hoverLayer = CAShapeLayer()
+        layer.addSublayer(hoverLayer)
     }
     
     //Second Dot data
     func addDot(_ dot: Dot) {
         DispatchQueue.main.async {
+            self.hoverLayer.removeFromSuperlayer() //remove hover when draw stroke
+
             let type = dot.dotType
             let pointXY = ScaleHelper.shared.getPoint(dot, self.frame.size)
             switch type {
             case .Down:
                 self.dotPath.move(to: pointXY)
-
             case .Move:
                 self.dotPath.addLine(to: pointXY)
                 self.shapelayer.path = self.dotPath.cgPath
+                
             case .Up:
                 self.dotPath.removeAllPoints()
                 break
@@ -65,10 +76,21 @@ class PageStrokeView: UIView {
         }
     }
     
-    func pointCheck(dot:Dot) -> CGPoint{
-        let x = ((dot.x - Float(self.x)) * (Float(self.frame.size.width) / Float(self.width)))
-        let y = (dot.y - Float(self.y)) * (Float(self.frame.size.height) / Float(self.height))
-        
-        return CGPoint(x: CGFloat(x), y: CGFloat(y))
+    //MARK: HoverView
+    func addHoverLayout(_ dot: Dot) {
+        DispatchQueue.main.async {
+            let len = self.hoverRadius
+            let currentLocation = ScaleHelper.shared.getPoint(dot, self.frame.size)
+            
+            let path = UIBezierPath(arcCenter: currentLocation, radius: len, startAngle: 0, endAngle: .pi * 2.0, clockwise: true)
+            
+            self.hoverLayer.path = path.cgPath
+            self.hoverLayer.fillColor = UIColor.orange.cgColor
+            self.hoverLayer.strokeColor = UIColor.yellow.cgColor
+            self.hoverLayer.lineWidth = self.hoverRadius * 0.05
+            self.hoverLayer.opacity = 0.6
+            self.layer.addSublayer(self.hoverLayer)
+            
+        }
     }
 }

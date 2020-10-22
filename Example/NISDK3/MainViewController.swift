@@ -59,8 +59,8 @@ class MainViewController: UIViewController {
         pencilSetBtn.isEnabled = false
         pencilSetBtn.tintColor = UIColor.clear
         
-        noteUpdate(supportNote: .note234)
-        symbolViewSet(supportNote: .note234)
+//        noteUpdate(supportNote: .note261)
+        symbolViewSet(supportNote: .note261)
         
         PenHelper.shared.connectDelegate = { [weak self] (success) -> () in
             if (success) {
@@ -71,7 +71,7 @@ class MainViewController: UIViewController {
                     self?.pencilConBtn.image = UIImage(systemName: "pencil")
                 } else {
                     self?.pencilConBtn.image = UIImage(named: "")
-                    self?.pencilConBtn.title = "연결"
+                    self?.pencilConBtn.title = "Connected"
                 }
             }else{
                 self?.penConnectBool = false
@@ -81,7 +81,7 @@ class MainViewController: UIViewController {
                     self?.pencilConBtn.image = UIImage(systemName: "pencil.slash")
                 } else {
                     self?.pencilConBtn.image = UIImage(named: "")
-                    self?.pencilConBtn.title = "비연결"
+                    self?.pencilConBtn.title = "Disconnected"
                 }
                 
                 if PenHelper.shared.connectingArr.count > 0{
@@ -110,8 +110,8 @@ class MainViewController: UIViewController {
                             self!.noteUpdate(supportNote: .note261)
                             self!.symbolViewSet(supportNote: .note261)
                             DispatchQueue.main.async {
-                                let alertController = UIAlertController(title: "알림", message: "샘플에서 지원하지 않는 노트 입니다.", preferredStyle: UIAlertController.Style.alert)
-                                let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.cancel, handler: nil)
+                                let alertController = UIAlertController(title: "Notice", message: "This note is not supported by the sample app", preferredStyle: UIAlertController.Style.alert)
+                                let okButton = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil)
                                 alertController.addAction(okButton)
                                 self?.present(alertController, animated: true, completion: nil)
                             }
@@ -148,6 +148,11 @@ class MainViewController: UIViewController {
                 self?.renderStrokeView.setStroke(self!.strokeRefresh)
                 self?.strokeRefresh.removeAll()
             }
+        }
+        
+        //HoverMode
+        PenHelper.shared.hoverDelegate = { (dot) -> () in
+            self.pageStrokeView.addHoverLayout(dot)
         }
     }
     

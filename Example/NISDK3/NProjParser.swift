@@ -27,31 +27,14 @@ class NProjParser {
     
     /**
      Returns NoteData
-     nproj 파일을 파싱합니다.
-     - Parameter data: String Type 의 nproj 파일.
+     Parsing .nproj
+     - Parameter data: nproj file of String type.
      */
     func pasing(_ data: String) -> NoteData? {
         let xml = SWXMLHash.parse(data)
         let noteInfo = NoteData.init(xml: xml)
         return noteInfo
     }
-    
-//    func note234Data() -> NoteData? {
-//        let nprojFileList = ["note_234"]
-//        for filename in nprojFileList {
-//            let nprojString = loadfile(filename)
-//            if !nprojString.isEmpty {
-//                guard let note = NProjParser.shared.pasing(nprojString) else{
-//                    print("Note Parsing Fail")
-//                    return nil
-//                }
-//                return note
-//            }else {
-//                print("\(filename) is nproj Error")
-//            }
-//        }
-//        return nil
-//    }
     
     func getNoteData(note: SampleSupportNote) -> NoteData? {
         let nprojFile = note.rawValue

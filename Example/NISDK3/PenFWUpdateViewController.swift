@@ -17,9 +17,9 @@ enum NetworkError: Error {
     var errorStr:String{
         switch self {
         case .domainError:
-            return "도메인이 잘못되었어요!"
+            return "Wrong Domain!"
         case .decodingError:
-            return "json디코딩 에러입니다!"
+            return "json decoding error!"
         }
     }
 }
@@ -67,13 +67,13 @@ class PenFWUpdateViewController: UIViewController {
                     if (self?.penFWVersion ?? "").compare((self?.fwServerVer ?? ""),options: []).rawValue == -1{
                         self?.fwUpdateBtn.isEnabled = true
 
-                        self?.fwUpdateBtn.setTitle("펌웨어 업데이트가 있습니다.", for: .normal)
+                        self?.fwUpdateBtn.setTitle("Firmware update exist.", for: .normal)
                     }else{
-                        self?.fwUpdateBtn.setTitle("펌웨어 업데이트가 없습니다.", for: .normal)
+                        self?.fwUpdateBtn.setTitle("Firmware update not exist.", for: .normal)
                     }
                     
-                    self?.penFWVer.text = "펜 Ver : \(self?.penFWVersion ?? "")"
-                    self?.penFWLastVer.text = "최신 Ver : \(self?.fwServerVer ?? "")"
+                    self?.penFWVer.text = "Pen FW Ver : \(self?.penFWVersion ?? "")"
+                    self?.penFWLastVer.text = "FW Latest Ver : \(self?.fwServerVer ?? "")"
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -105,8 +105,8 @@ class PenFWUpdateViewController: UIViewController {
         PenHelper.shared.fwUpdateSuccessDelegate = { [weak self] updateBool in
             if updateBool{
                 DispatchQueue.main.async {
-                    let alertController = UIAlertController(title: "알림", message: "펌웨어 업데이트 완료되었습니다.\n펜을 다시 연결해주세요.", preferredStyle: UIAlertController.Style.alert)
-                    let okButton = UIAlertAction(title: "확인", style: UIAlertAction.Style.cancel, handler: { alert -> Void in
+                    let alertController = UIAlertController(title: "Notice", message: "Firmware update finished. Please reconnect the pen.", preferredStyle: UIAlertController.Style.alert)
+                    let okButton = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: { alert -> Void in
                         let  vc = self?.navigationController?.viewControllers.filter({$0 is MainViewController}).first
                         PenHelper.shared.connectDelegate?(false)
                         self?.navigationController?.popToViewController(vc!, animated: true)
@@ -218,12 +218,12 @@ class PenFWUpdateViewController: UIViewController {
     @IBAction func fwUpdateBtnClicked(_ sender: UIButton) {
         if sender.tag == 1{
             self.perView.isHidden = false
-            sender.setTitle("펌웨어 업데이트 취소하기", for: .normal)
+            sender.setTitle("Cancel Firmware update", for: .normal)
             startFirmwareUpdate()
             sender.tag = 2
         }else{
             sender.tag = 1
-            sender.setTitle("펌웨어 업데이트가 있습니다.", for: .normal)
+            sender.setTitle("Firmware update exist.", for: .normal)
             cancelTask()
         }
     }

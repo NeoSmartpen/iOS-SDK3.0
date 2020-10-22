@@ -74,9 +74,9 @@ extension PenOfflineNoteViewController: UITableViewDelegate , UITableViewDataSou
         let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath) as! NoteCell
         switch dataCheck {
         case .note:
-            cell.noteLabel.text = "\"\(self.notelist[indexPath.row].note)\"번 노트"
+            cell.noteLabel.text = "Note \"\(self.notelist[indexPath.row].note)\""
         case .page:
-            cell.noteLabel.text = "\"\(self.pagelist?.note ?? 0)\"번 노트 \(self.pagelist?.page[indexPath.row] ?? 0) 페이지"
+            cell.noteLabel.text = "Note\"\(self.pagelist?.note ?? 0)\" Page \(self.pagelist?.page[indexPath.row] ?? 0)"
         }
         return cell
     }

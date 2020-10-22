@@ -29,9 +29,9 @@ public struct NoteData {
     public var startPage = 0
     /// note segment Index (분절 북의 경우
     public var segmentId = 0
-    /// 노트 전체의 PageData List
+    /// PageData List in Note
     public var pageList: [PageData] = []
-    /// 노트 전체의 SymbolData List
+    /// SymbolData List in Note
     public var symbolList: [SymbolData] = []
     /// paper size.
     public var paperSize: CGRect?

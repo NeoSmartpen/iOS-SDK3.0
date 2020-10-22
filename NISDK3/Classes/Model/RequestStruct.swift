@@ -136,11 +136,6 @@ struct REQ {
             length = 1 + UInt16(value.count)
         }
         
-        init(_ type: PenSetupType, _ mode: PenSettingStruct.USBMode ){
-            self.type = type
-            value = [mode.rawValue]
-            length = 1 + UInt16(value.count)
-        }
         
         init(_ type: PenSetupType, _ sensitive: PenSettingStruct.Sensitive){
             self.type = type

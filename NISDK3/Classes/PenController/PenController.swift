@@ -213,7 +213,7 @@ public class PenController: NSObject {
     }
 
     /// Pen Pressuer Sensor Sensitivity: 0(max) ~ 4
-    public func requestSetPenPressStep(_ step: UInt8 ) {
+    public func requestSetPenPressStep(_ step: UInt8) {
         if let peninfo = penCommParser.penVersionInfo {
             if peninfo.pressureSensorType == .FSR {
                 penCommParser.requestSetPenFSRStep(step)
@@ -226,22 +226,6 @@ public class PenController: NSObject {
             N.Log("Not support Pressure Sensor function")
         }
     }
-    
-    /// USB Disk or Bulk[10]
-//    public func requestSetPenUSBMode(_ mode: PenSettingStruct.USBMode) {
-//        penCommParser.requestSetPenUSBMode(mode)
-//    }
-    
-    /// Dot Down Sampling[11]
-//    public func requestSetPenDownSampling(_ onOff: OnOff) {
-//        penCommParser.requestSetPenDownSampling(onOff)
-//    }
-    
-    /// Pen Local Name Setting[12]
-//    public func requestSetPenLocalname(_ name: String) {
-//        penCommParser.requestSetPenLocalname(name)
-//    }
-    
     
     // MARK: - Offline Data
     /// Offline Note List

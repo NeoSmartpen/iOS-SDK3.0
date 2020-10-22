@@ -16,11 +16,12 @@ class PenHelper: PenDelegate{
     static let shared = PenHelper()
     
     private init() { }
-//    private init() {initData() }
     
     var penAutorizedDelegate: ((_ success: Bool) -> ())?
     var connectDelegate: ((Bool) -> ())?
     var dotDelegate: (( _ dot: Dot) -> ())?
+    //For hovermode
+    var hoverDelegate: (( _ dot: Dot) -> ())?
     var penSettingDelegate: ((_ status: PenSettingStruct) -> ())?
     var offlinenoteDelegate: ( (_ notes: OfflineNoteList) -> ())?
     var offlinepageDelegate: ( (_ pages: OfflinePageList) -> ())?
@@ -118,7 +119,11 @@ class PenHelper: PenDelegate{
     }
   
     func hoverData(_ sender: PenController, _ dot: Dot) {
-        print("hoverData : sender : \(sender) - dot \(dot)")
+//        print("hoverData : sender : \(sender) - dot \(dot)")
+        if hoverDelegate != nil {
+            //print("dot dot dot : \(dot)")
+            hoverDelegate?(dot)
+        }
     }
     
     func setPen(pen : PenController){
