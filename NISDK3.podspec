@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'NISDK3'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'iOS SDK for NeoSmartPen'
 4
   s.description      = 'NeoSmartpen Controller with Bluetooth'
