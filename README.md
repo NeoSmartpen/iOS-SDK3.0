@@ -1,6 +1,7 @@
 ## iOS SDK3.0
 Neo smartpen SDK(also referred to as ‘Pen SDK’) for iOS. This open-source library allows you to integrate the Neo smartpen - Neo smartpen N2, M1, M1+ and dimo - into your iOS app. 
 
+
 ## About Neo smartpen
 
 The Neo smartpen is designed to seamlessly integrate the real and digital worlds by transforming what you write on paper - everything from sketches and designs to business meeting notes - to your iOS, Android and Windows devices. It works in tandem with N notebooks, powered by NeoLAB Convergence’s patented Ncode™ technology and the accompanying application, Neo Notes. Find out more at www.neosmartpen.com
@@ -14,6 +15,7 @@ Tutorial video - https://goo.gl/MQaVwY
 Click the link below to view a beginners guide to Ncode technology. 
 [https://github.com/NeoSmartpen/Documentations/blob/master/Ncode™ Service Development Getting Started Guide v1.01.pdf](https://github.com/NeoSmartpen/Documentations/blob/master/Ncode%E2%84%A2%20Service%20Development%20Getting%20Started%20Guide%20v1.01.pdf)
 
+
 ## Requirements
 
 - OS X is required for all iOS development
@@ -21,15 +23,19 @@ Click the link below to view a beginners guide to Ncode technology.
 - Swift version 4.0 or above.
 - iOS version 10.0 or above.
 
+
 ## Supported models
+
 - Neo smartpen N2(F110, F120, F121)
 - Neo smartpen M1(F50)
 - Neo smartpen M1+(F51)
 - Neo smartpen Dimo(F30)
 
+
 ## Getting started
 
 NISDK3 Document link : [https://github.com/NeoSmartpen/iOS-SDK3.0/blob/master/NISDK3.pdf ](https://github.com/NeoSmartpen/iOS-SDK3.0/blob/master/NISDK3.pdf)
+
 
 ## LICENSE
 
@@ -58,6 +64,7 @@ Feel free to leave any comment or feedback [here](https://github.com/NeoSmartpen
 
 
 ## Open Source Library
+
 - And we are using the following open sources.
 
 ### SWXMLHash ([https://github.com/drmohundro/SWXMLHash](https://github.com/drmohundro/SWXMLHash))
