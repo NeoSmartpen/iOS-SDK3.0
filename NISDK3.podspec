@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = 'NISDK3'
   s.version          = '1.0.1'
   s.summary          = 'iOS SDK for NeoSmartPen'
-4
+
   s.description      = 'NeoSmartpen Controller with Bluetooth'
 
   s.homepage         = 'https://www.neosmartpen.com'
@@ -20,6 +20,10 @@ Pod::Spec.new do |s|
   
   s.swift_version = '4.0'
   s.ios.deployment_target = '10.0'
+  s.osx.deployment_target = "10.14"
+  
+  s.platform = :ios, '10.0'
+  s.platform = :osx, '10.14'
   s.source_files = 'NISDK3/Classes/**/*'
   
   # s.resource_bundles = {

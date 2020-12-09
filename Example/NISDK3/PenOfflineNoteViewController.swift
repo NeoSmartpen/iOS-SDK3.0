@@ -39,9 +39,10 @@ class PenOfflineNoteViewController: UIViewController {
         
         PenHelper.shared.offlinepageDelegate = { [weak self] (pageinfo) -> () in
             self?.pagelist = pageinfo
+            print("페이지리스트 : \(self?.pagelist)")
             DispatchQueue.main.async {
                 self?.dataCheck = .page
-                self?.tableView.reloadData()
+                self?.tableView.reloadData() 
             }
         }
         
