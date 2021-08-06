@@ -8,7 +8,13 @@
 
 import Foundation
 import CoreBluetooth
+#if os(iOS) || os(watchOS) || os(tvOS)
 import UIKit
+
+#elseif os(macOS)
+import AppKit
+#else
+#endif
 
 /// Pen Controller (API Main Component)
 public class PenController: NSObject {
@@ -79,7 +85,7 @@ public class PenController: NSObject {
     fileprivate func startTimerForVerInfoReq() {
         if verInfoTimer == nil {
             verInfoTimer = Timer(timeInterval: 0.7, target: self, selector: #selector(self.requestVersionInfo), userInfo: nil, repeats: false)
-            RunLoop.main.add(verInfoTimer!, forMode: RunLoopMode.defaultRunLoopMode)
+            RunLoop.main.add(verInfoTimer!, forMode: RunLoop.Mode.default)
         }
     }
     
@@ -225,6 +231,15 @@ public class PenController: NSObject {
         } else {
             N.Log("Not support Pressure Sensor function")
         }
+    }
+    
+    //MARK: System Setting
+    public func requestSystemInfo() {
+        penCommParser.requestSystemInfo()
+    }
+    
+    public func requestSystemSetPerformance( _ step: PerformanceStep) {
+        penCommParser.requestSystemSetPerformance(step)
     }
     
     // MARK: - Offline Data

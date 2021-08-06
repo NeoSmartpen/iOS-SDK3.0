@@ -70,7 +70,7 @@ class PenSearchViewController: UIViewController ,UIGestureRecognizerDelegate{
         super.viewDidAppear(animated)
         DispatchQueue.main.async {
             self.penList.removeAll()
-            UserDefaults.standard.set(nil, forKey: "mac")
+//            UserDefaults.standard.set(nil, forKey: "mac")
             self.penFinder.scan(10.0)
         }
     }
@@ -112,7 +112,7 @@ class PenSearchViewController: UIViewController ,UIGestureRecognizerDelegate{
                 textField.isSecureTextEntry = true
             }
 
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object:alertController.textFields?[0],queue: OperationQueue.main) { (notification) -> Void in
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object:alertController.textFields?[0],queue: OperationQueue.main) { (notification) -> Void in
                 let pw1 = alertController.textFields?[0].text
                 saveAction.isEnabled = self.isPassword(pw1: pw1 ?? "")
             }
@@ -208,8 +208,8 @@ extension PenSearchViewController : UITableViewDataSource,UITableViewDelegate{
             return
         }
         isConnecting = true
-        let mac = penList[row].penAd.mac
-        UserDefaults.standard.set(mac, forKey: "mac")
+        _ = penList[row].penAd.mac
+//        UserDefaults.standard.set(mac, forKey: "mac")
         penFinder.connectPeripheral(penList[row].peripheral)
         PenHelper.shared.connectingArr.append((penList[row].peripheral, penList[row].penAd))
     }

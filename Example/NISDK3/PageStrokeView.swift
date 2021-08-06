@@ -47,7 +47,7 @@ class PageStrokeView: UIView {
         shapelayer.lineWidth = 1
         shapelayer.strokeColor = UIColor.black.cgColor
         shapelayer.fillColor = UIColor.clear.cgColor
-        shapelayer.lineCap = kCALineCapRound
+        shapelayer.lineCap = CAShapeLayerLineCap.round
         layer.addSublayer(shapelayer)
         
         //HoverView

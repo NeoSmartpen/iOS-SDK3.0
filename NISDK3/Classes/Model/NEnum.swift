@@ -97,7 +97,12 @@ public enum PenSetupType: UInt8 {
     case PenLEDColor = 8
     /// 0 ~ 4 (0 Most Sensitive)
     case FSRStep = 9
-    
+    /// USB Connect Interface : Disk or Bulk
+    case USBMode = 10
+    /// DownSampling on/off
+    case DownSampling = 11
+    /// Set Device LocalName
+    case LocalName = 12
     /// 0 ~ 4 (0 Most Sensitive)
     case FSCStep = 13
     /// Not define from SDK
@@ -196,6 +201,27 @@ public enum ProfileType: UInt8 {
     case NotDefined = 0x99
 }
 
+public enum SystmeType: UInt8 {
+    case Perfomance = 0x01
+}
+
+public enum PerformanceStep: UInt32 {
+    case lowFrame = 0
+    case highFrame = 1
+    
+    func getValue() -> [UInt8] {
+        var value: [UInt8] = [0xfe, 0xfe, 0xfe, 0xfe]
+        value.append(contentsOf: self.rawValue.toUInt8Array())
+        return value
+    }
+}
+
+public enum SystemResult: UInt8 {
+    case Success = 0
+    case NotSupport = 1
+    case ingore
+}
+
 //MARK: - Offline Data -
 ///
 //public enum OFFLINE_DATA_STATUS : Int {
@@ -208,4 +234,3 @@ public enum ProfileType: UInt8 {
 //    ///
 //    case FAIL
 //}
-

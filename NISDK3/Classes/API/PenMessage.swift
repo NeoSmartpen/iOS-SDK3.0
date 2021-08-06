@@ -130,6 +130,18 @@ public enum PenMessage {
      - data: ProfileStruct
      */
     case PEN_PROFILE(ProfileStruct)
+   
+    /**
+     System Info
+     - data: SystemInfoStruct
+     */
+    case SYSTEM_INFO(SystemInfoStruct)
+
+    /**
+     System Change
+     - data: SystemChangeStruct
+     */
+    case SYSTEM_CHANGE(SystemChangeStruct)
     
     /**
      SoundPen PDS(for touch and play)
@@ -167,4 +179,6 @@ public enum PenMessage {
      */
     case SOUND_RES_LOG_DATA(LogDataStruct)
     
+    
+    case PEN_PACKET_ERROR(PacketErrorStruct)
 }

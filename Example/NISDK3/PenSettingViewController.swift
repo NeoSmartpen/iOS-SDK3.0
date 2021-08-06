@@ -19,6 +19,7 @@ class PenSettingViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var penStatus: PenSettingStruct?
+    var systemInfo: SystemInfoStruct?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +29,14 @@ class PenSettingViewController: UIViewController {
                 self?.tableView.reloadData()
             }
         }
+        PenHelper.shared.systemSettingDelegate = { [weak self] (info) in
+            self?.systemInfo = info
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
         PenHelper.shared.pen?.requestPenSettingInfo()
+        PenHelper.shared.pen?.requestSystemInfo()
     }
     
     func cellValueHidden(cell:PenSettinghCell,switchHidden:Bool,settingValueHidden:Bool){
@@ -86,17 +94,21 @@ class PenSettingViewController: UIViewController {
                 sender.isOn = false
                 PenHelper.shared.pen?.requestSetPenOfflineSave(OnOff.Off)
             }
-        }else if tag == 6{
-
-        }else if tag == 7{
-
+        }else if tag == 12{
+            // Eco mode
+            if sender.isOn {
+                PenHelper.shared.pen?.requestSystemSetPerformance(.lowFrame)
+            }else{
+                PenHelper.shared.pen?.requestSystemSetPerformance(.highFrame)
+            }
+            PenHelper.shared.pen?.requestSystemInfo()
         }
     }
 }
 
 extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 12
+        return 13
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -154,6 +166,12 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
             cell.SettingName.text = "Pen Firmware Update"
             cell.settingValue.text = "▼"
             cellValueHidden(cell: cell, switchHidden: true, settingValueHidden: false)
+        }else if row == 12{
+            cell.SettingName.text = "펜 에코모드"
+            cell.OnOffSwitch.isOn = systemInfo?.performanceStep == .lowFrame
+            cell.OnOffSwitch.tag = row
+            cellValueHidden(cell: cell, switchHidden: false, settingValueHidden: true)
+            cell.isHidden = penStatus?.usingSystemSetting != .On
         }
         
         return cell
@@ -211,12 +229,12 @@ extension PenSettingViewController : UITableViewDataSource,UITableViewDelegate{
             
         }
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object:alertController.textFields?[0],queue: OperationQueue.main) { (notification) -> Void in
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object:alertController.textFields?[0],queue: OperationQueue.main) { (notification) -> Void in
             let pw1 = alertController.textFields?[0].text
             let pw2 = alertController.textFields![1].text
             saveAction.isEnabled = self.isPassword(pw1: pw1 ?? "", pw2: pw2 ?? "")
         }
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object:alertController.textFields?[1],queue: OperationQueue.main) { (notification) -> Void in
+        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object:alertController.textFields?[1],queue: OperationQueue.main) { (notification) -> Void in
             let pw2 = alertController.textFields?[1].text
             let pw1 = alertController.textFields?[0].text
             saveAction.isEnabled = self.isPassword(pw1: pw1 ?? "", pw2: pw2 ?? "")

@@ -23,6 +23,9 @@ class PenHelper: PenDelegate{
     //For hovermode
     var hoverDelegate: (( _ dot: Dot) -> ())?
     var penSettingDelegate: ((_ status: PenSettingStruct) -> ())?
+    
+    var systemSettingDelegate:((_ info: SystemInfoStruct) -> ())?
+    
     var offlinenoteDelegate: ( (_ notes: OfflineNoteList) -> ())?
     var offlinepageDelegate: ( (_ pages: OfflinePageList) -> ())?
     //Step2 : Offline Data
@@ -115,6 +118,13 @@ class PenHelper: PenDelegate{
             print("SOUND_RES_LOG_INFO : - msg : \(msg)")
         case .SOUND_RES_LOG_DATA:
             print("SOUND_RES_LOG_DATA : - msg : \(msg)")
+        case .SYSTEM_INFO(let systemInfo):
+            print("SYSTEM_INFO : - msg : \(msg)", systemInfo)
+            systemSettingDelegate?(systemInfo)
+        case .SYSTEM_CHANGE(let systemChange):
+            print("SYSTEM_CHANGE : - msg : \(msg)", systemChange)
+        case .PEN_PACKET_ERROR(let err):
+            print("SYSTEM_CHANGE",err)
         }
     }
   

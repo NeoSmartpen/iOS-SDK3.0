@@ -46,6 +46,11 @@ enum CMD: UInt8 {
     case RES1_FW_FILE = 0xB1
     case REQ2_FW_FILE = 0x32
     case RES_PROFILE = 0xC1
+    // System Setting
+    case REQ_SYSTEM_CHANGE = 0x06
+    case REQ_SYSTEM_INFO = 0x07
+    case RES_SYSTEM_CHANGE = 0x86
+    case RES_SYSTEM_INFO = 0x87
     
     // Only Touch and play
     case SOUND_RES_PDS = 0x73

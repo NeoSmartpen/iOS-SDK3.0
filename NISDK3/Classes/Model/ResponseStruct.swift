@@ -7,7 +7,13 @@
 //
 
 import Foundation
+#if os(iOS) || os(watchOS) || os(tvOS)
 import UIKit
+
+#elseif os(macOS)
+import AppKit
+#else
+#endif
 
 protocol Response {
     var isValid: Bool {get}
@@ -450,9 +456,15 @@ public struct PenSettingStruct {
     public var offlineOnOff: OnOff = OnOff.On
     /// Pen Pressure
     public var penPressure: UInt8 = 0
-    /// Pen LocalName
+    /// Down Sampling data
+    public var downSampling: OnOff = OnOff.On
+    /// loacal name
     public var localName: String = ""
-    var reserved: [UInt8] = [UInt8](repeating: 0, count: 23)
+    /// NDAC Error Save Flag
+    public var NDACErrorSave: OnOff = OnOff.Off
+    /// System Setting
+    public var usingSystemSetting: OnOff = OnOff.Off
+    var reserved: [UInt8] = [UInt8](repeating: 0, count: 20)
     
     static let length = 64
     init(){
@@ -478,10 +490,13 @@ public struct PenSettingStruct {
         battLevel = d[20] & 0x7f
         offlineOnOff = OnOff(rawValue: d[21]) ?? .Ignore
         penPressure = d[22]
+        downSampling = OnOff(rawValue: d[24]) ?? .Ignore
         localName = toString(Array(d[25..<41]))
-        reserved = Array(d[41..<64])
+        _ = d[41] // Not Use, Skip
+        NDACErrorSave = OnOff(rawValue: d[42]) ?? .Ignore
+        usingSystemSetting = OnOff(rawValue: d[43]) ?? .Ignore
+        reserved = Array(d[44..<64])
     }
-    
     /// Pen lock
     public enum Lock: UInt8 {
         /// unlock
@@ -504,7 +519,6 @@ public struct PenSettingStruct {
         case LV4 = 4
     }
 }
-
 
 //MARK: - Offline -
 public struct OfflineNoteList {
@@ -1009,6 +1023,26 @@ public struct LogInfoStruct {
         totalLogCount = toUInt16(d, at: 0)
     }
 }
+    
+public struct PacketErrorStruct{
+    public enum PacketErrorType:UInt8{
+        case Fail = 0x01
+        case AuthorizedErr = 0x02
+        case PacketLengthErr = 0x04
+        case NotSupportCMD = 0x05
+        case Unknown
+    }
+    var cmd:CMD?
+    var packetErrorType:PacketErrorType = .Unknown
+    
+    init( _ d: [UInt8] ) {
+        cmd = CMD(rawValue: d[0])
+        guard d.count >= 2 else{
+            return
+        }
+        packetErrorType = PacketErrorType(rawValue: d[1]) ?? .Unknown
+    }
+}
 
 /// LogDataStruct
 public struct LogDataStruct {
@@ -1176,8 +1210,44 @@ public struct LogDataStruct {
             x = Float(toUInt16(d, at: 23)) + Float(d[27]) * 0.01
             y = Float(toUInt16(d, at: 25)) + Float(d[28]) * 0.01
         }
-        
     }
+}
+
+
+/// System
+public struct SystemInfoStruct {
+    public var performanceEnable: OnOff = .Ignore
+    public var performanceStep: PerformanceStep = PerformanceStep.lowFrame
+    public var reserved: [UInt8] = []
     
+    init(){}
     
+    init(_ d: [UInt8]){
+        guard d.count >= 128 else {
+            N.Log("Data Size Error: ", type(of: self))
+            return
+        }
+        performanceEnable = OnOff(rawValue: d[0]) ?? .Ignore
+        performanceStep = PerformanceStep(rawValue: toUInt32(d, at: 5)) ?? .lowFrame
+//        reserved = Array(d[10..<128])
+    }
+
+}
+
+public struct SystemChangeStruct {
+    public var type: UInt8 = 0
+    public var status: SystemResult = .ingore
+
+    init(){}
+    
+    init(_ d: [UInt8]){
+        type = d[0]
+        if type == 1 {
+            guard d.count >= 2 else {
+                N.Log("Data Size Error: SystemChange \(d.count)")
+                return
+            }
+            status = SystemResult(rawValue: d[1]) ?? .ingore
+        }
+    }
 }

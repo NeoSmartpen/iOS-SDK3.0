@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreBluetooth
 
 public struct PenAdvertisementStruct: Codable {
     public var mac: String = ""
@@ -15,7 +16,7 @@ public struct PenAdvertisementStruct: Codable {
     public var productCode: Int = 0
     public var colorCode: Int = 0
     
-    init(_ advertisementData: [String: Any]) {
+    init(_ advertisementData: [String: Any], _ peripheral: CBPeripheral) {
         if  let manufactureData = advertisementData["kCBAdvDataManufacturerData"]{
             mac = getMacAddr(fromString: manufactureData)
             if let code = getModelCode(manufactureData) {
@@ -27,6 +28,9 @@ public struct PenAdvertisementStruct: Codable {
         
         if let localName = advertisementData["kCBAdvDataLocalName"] as? String {
             subName = localName
+        }
+        if subName.isEmpty, let peripheralName = peripheral.name {
+            subName = peripheralName
         }
     }
     

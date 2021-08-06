@@ -7,7 +7,12 @@
 //
 
 import Foundation
+#if os(iOS) || os(watchOS) || os(tvOS)
 import UIKit
+#elseif os(macOS)
+import AppKit
+#else
+#endif
 
 /// NeoView Framework Version String
 public var NISDK_Version: String {
@@ -55,12 +60,11 @@ extension UIColor {
         var fGreen : CGFloat = 0
         var fBlue : CGFloat = 0
         var fAlpha: CGFloat = 0
-        if self.getRed(&fRed, green: &fGreen, blue: &fBlue, alpha: &fAlpha){
-            result[1] = UInt8(fRed * 255.0)
-            result[2] = UInt8(fGreen * 255.0)
-            result[3] = UInt8(fBlue * 255.0)
-            result[0] = UInt8(fAlpha * 255.0)
-        }
+        self.getRed(&fRed, green: &fGreen, blue: &fBlue, alpha: &fAlpha)
+        result[1] = UInt8(fRed * 255.0)
+        result[2] = UInt8(fGreen * 255.0)
+        result[3] = UInt8(fBlue * 255.0)
+        result[0] = UInt8(fAlpha * 255.0)
         return result
     }
 }

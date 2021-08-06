@@ -8,7 +8,13 @@
 
 import Foundation
 import CoreBluetooth
+#if os(iOS) || os(watchOS) || os(tvOS)
 import UIKit
+
+#elseif os(macOS)
+import AppKit
+#else
+#endif
 
 /// Pen Search and Connect Helper Class
 public class PenFinder: NSObject {
@@ -80,7 +86,7 @@ public class PenFinder: NSObject {
     private func startScanTimer(_ duration: CGFloat) {
         if timer == nil {
             timer = Timer(timeInterval: TimeInterval(duration), target: self, selector: #selector(self.stopScanTimer), userInfo: nil, repeats: false)
-            RunLoop.main.add(timer!, forMode: RunLoopMode.defaultRunLoopMode)
+            RunLoop.main.add(timer!, forMode: RunLoop.Mode.default)
         }
     }
     
@@ -154,7 +160,7 @@ extension PenFinder: CBCentralManagerDelegate {
         }
     
         let rssi = Int(truncating: RSSI)
-        let penAdvertiseMent = PenAdvertisementStruct(advertisementData)
+        let penAdvertiseMent = PenAdvertisementStruct(advertisementData, peripheral)
 //        N.Log(penAdvertiseMent)
 
         self.findlist.append((peripheral, penAdvertiseMent, rssi))

@@ -8,7 +8,13 @@
 //
 
 import Foundation
+#if os(iOS) || os(watchOS) || os(tvOS)
 import UIKit
+
+#elseif os(macOS)
+import AppKit
+#else
+#endif
 
 class PenCommParser {
     
@@ -85,6 +91,11 @@ class PenCommParser {
     // Complet Packet [CMD, (error), length, Data]
     func parsePenDataPacket(_ packet: [UInt8]) {
         let data: [UInt8] = packet
+        
+        if data.isEmpty{
+            return
+        }
+        
         guard let cmd = CMD(rawValue: data[0]) else{
             N.Log("CMD Error")
             return
@@ -92,6 +103,13 @@ class PenCommParser {
         if penDelegate == nil {
             N.Log("Need to set Delegate")
         }
+        
+        if data.count < 3 {
+            let msg = PenMessage.PEN_PACKET_ERROR(PacketErrorStruct(data))
+            penDelegate?.penMessage(penCtrl, msg)
+            return
+        }
+        
         var packetDataLength = Int(toUInt16(data[1],data[2]))
         var pos: Int = 3
         switch cmd {
@@ -611,6 +629,40 @@ class PenCommParser {
             let profile = ProfileStruct.init(Array(data[pos..<pos+packetDataLength]))
             let msg = PenMessage.PEN_PROFILE(profile)
             penDelegate?.penMessage(penCtrl, msg)
+            
+        //MARK: System
+        case .RES_SYSTEM_INFO:
+            // error code
+            pos += 1
+            packetDataLength = Int(toUInt16(data[2],data[3]))
+            if data[1] != 0 {
+                N.Log("Error", data[1])
+                return
+            }
+            if data.count < packetDataLength + pos {
+                N.Log("Error packet length", cmd)
+                return
+            }
+            let systemInfo = SystemInfoStruct(Array(data[pos..<pos+packetDataLength]))
+            let msg = PenMessage.SYSTEM_INFO(systemInfo)
+            penDelegate?.penMessage(penCtrl, msg)
+            
+        case .RES_SYSTEM_CHANGE:
+            // error code
+            pos += 1
+            packetDataLength = Int(toUInt16(data[2],data[3]))
+            if data[1] != 0 {
+                N.Log("Error", data[1])
+                return
+            }
+            if data.count < packetDataLength + pos {
+                N.Log("Error packet length", cmd)
+                return
+            }
+            let systemInfo = SystemChangeStruct(Array(data[pos..<pos+packetDataLength]))
+            let msg = PenMessage.SYSTEM_CHANGE(systemInfo)
+            penDelegate?.penMessage(penCtrl, msg)
+            
         //MARK: PDS (Only Sound SDK)
         case .SOUND_RES_PDS:
             if data.count < packetDataLength + pos {
@@ -789,7 +841,15 @@ class PenCommParser {
         N.Log("Req setPenState 0x5 data \(data)")
         penCtrl.writePenSetData(data)
     }
-    
+    /// [10]
+    /// [11]
+    /// [12]
+    func requestSetPenLocalname(_ name: String) {
+        let request = REQ.PenStatus.init(.LocalName, name)
+        let data = request.toUInt8Array().toData()
+        N.Log("Req setPenState 0x5 data \(data)")
+        penCtrl.writePenSetData(data)
+    }
     /// [13]
     func requestSetPenFSCStep(_ pressure: UInt8){
         let request = REQ.PenStatus.init(.FSCStep,  PenSettingStruct.Sensitive(rawValue: pressure) ?? PenSettingStruct.Sensitive.Max )
@@ -1000,6 +1060,22 @@ class PenCommParser {
         N.Log("Req Profile 0x41 deleteProfileValue  \(data)")
         penCtrl.writePenSetData(data)
     }
+    
+    //MARK: Pen System Control
+    func requestSystemInfo() {
+        let request = REQ.SystemInfo()
+        let data = request.toUInt8Array().toData()
+        N.Log("Req System Info 0x07")
+        penCtrl.writePenSetData(data)
+    }
+    
+    func requestSystemSetPerformance( _ step: PerformanceStep) {
+        let request = REQ.SystemChange(.Perfomance, step.getValue())
+        let data = request.toUInt8Array().toData()
+        N.Log("Req System Change 0x06")
+        penCtrl.writePenSetData(data)
+    }
+    
     
     //MARK: - Sound SDK
     func requestLogInfo(_ compressed: REQ.LogInfo.Compressed) {

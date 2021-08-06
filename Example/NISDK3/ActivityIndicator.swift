@@ -27,7 +27,11 @@ class ActivityIndicator: NSObject {
         loadingView.layer.cornerRadius = 10
         
         activityIndicator.frame = CGRect(x:10.0, y:0.0, width:40.0, height:40.0);
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorView.Style.whiteLarge
+        if #available(iOS 13.0, *) {
+            activityIndicator.style = UIActivityIndicatorView.Style.large
+        } else {
+            activityIndicator.style = UIActivityIndicatorView.Style.whiteLarge
+        }
         activityIndicator.center = CGPoint(x:loadingView.frame.size.width / 2, y:loadingView.frame.size.height / 2);
         
         label.text = "노트를 갱신중.."
