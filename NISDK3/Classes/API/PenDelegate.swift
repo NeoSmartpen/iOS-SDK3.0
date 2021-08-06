@@ -10,7 +10,7 @@ import Foundation
 import CoreBluetooth
 
 /// Receive From Device : penData & penMessage
-public protocol PenDelegate: class {
+public protocol PenDelegate: AnyObject {
     /// Pen Dot Data
     func penData(_ sender: PenController,  _ dot: Dot)
     /// Pen Message
