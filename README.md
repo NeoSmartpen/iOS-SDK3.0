@@ -26,7 +26,7 @@ Click the link below to view a beginners guide to Ncode technology.
 
 ## Supported models
 
-- Neo smartpen N2(F110, F120, F121)
+- Neo smartpen N2(F120, F121)
 - Neo smartpen M1(F50)
 - Neo smartpen M1+(F51)
 - Neo smartpen Dimo(F30)
