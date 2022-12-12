@@ -2,6 +2,6 @@ use_frameworks!
 
 target 'NISDK3_Example' do
   pod 'NISDK3', :path => '../'
-  pod 'SWXMLHash'
+  pod 'SWXMLHash', '5.0.1'
 
 end

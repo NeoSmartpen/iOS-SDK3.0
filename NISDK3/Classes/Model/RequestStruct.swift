@@ -9,12 +9,10 @@
 import Foundation
 #if os(iOS) || os(watchOS) || os(tvOS)
 import UIKit
-
 #elseif os(macOS)
 import AppKit
 #else
 #endif
-
 protocol Request {
     func toUInt8Array() -> [UInt8]
 }
@@ -141,7 +139,6 @@ struct REQ {
             value = [onOff.rawValue]
             length = 1 + UInt16(value.count)
         }
-        
         
         init(_ type: PenSetupType, _ sensitive: PenSettingStruct.Sensitive){
             self.type = type
@@ -518,7 +515,7 @@ struct REQ {
     struct SystemInfo: Request {
         var cmd: UInt8 = CMD.REQ_SYSTEM_INFO.rawValue // 0x07
         var length: UInt16 = 0
-
+        
         func toUInt8Array() -> [UInt8] {
             var data = [UInt8]()
             data.append(cmd)
@@ -526,19 +523,19 @@ struct REQ {
             return data
         }
     }
-
+    
     struct SystemChange: Request {
         var cmd: UInt8 = CMD.REQ_SYSTEM_CHANGE.rawValue // 0x06
         var length: UInt16 = 1
         var type: SystmeType = .Perfomance
         var value: [UInt8] = []
-
+        
         init( _ type: SystmeType, _ value: [UInt8]) {
             self.type = type
             self.value = value
             self.length = UInt16(value.count + 1)
         }
-
+        
         func toUInt8Array() -> [UInt8] {
             var data = [UInt8]()
             data.append(cmd)
@@ -548,7 +545,7 @@ struct REQ {
             return data
         }
     }
-
+    
     struct LogInfo: Request {
         var cmd : UInt8 = CMD.SOUND_REQ_LOG_INFO.rawValue // 0x74
         var length: UInt16 = 1

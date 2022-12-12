@@ -9,12 +9,10 @@
 import Foundation
 #if os(iOS) || os(watchOS) || os(tvOS)
 import UIKit
-
 #elseif os(macOS)
 import AppKit
 #else
 #endif
-
 protocol Response {
     var isValid: Bool {get}
 }
@@ -497,6 +495,7 @@ public struct PenSettingStruct {
         usingSystemSetting = OnOff(rawValue: d[43]) ?? .Ignore
         reserved = Array(d[44..<64])
     }
+    
     /// Pen lock
     public enum Lock: UInt8 {
         /// unlock
@@ -519,6 +518,7 @@ public struct PenSettingStruct {
         case LV4 = 4
     }
 }
+
 
 //MARK: - Offline -
 public struct OfflineNoteList {
@@ -752,7 +752,7 @@ public struct PenPasswordChangeStruct {
 
 /// Profile Struct
 public struct ProfileStruct {
-    var status: ProfileStatus = ProfileStatus.Success
+    public var status: ProfileStatus = ProfileStatus.Success
     /// Profile Name
     public var name: String = ""
     /// Profile type
@@ -841,7 +841,7 @@ public struct ProfileStruct {
     /// Profile data: KeyRead
     public struct KeyRead {
         var keyCount: Int = 0
-        var keyValue: [String : [UInt8]]  = [:]
+        public var keyValue: [String : [UInt8]]  = [:]
         var keyStatus: [ProfileStatus] = []
         
         init(_ d: [UInt8]) {
@@ -1023,7 +1023,7 @@ public struct LogInfoStruct {
         totalLogCount = toUInt16(d, at: 0)
     }
 }
-    
+
 public struct PacketErrorStruct{
     public enum PacketErrorType:UInt8{
         case Fail = 0x01

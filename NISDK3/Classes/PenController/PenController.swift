@@ -10,12 +10,10 @@ import Foundation
 import CoreBluetooth
 #if os(iOS) || os(watchOS) || os(tvOS)
 import UIKit
-
 #elseif os(macOS)
 import AppKit
 #else
 #endif
-
 /// Pen Controller (API Main Component)
 public class PenController: NSObject {
     
@@ -242,6 +240,7 @@ public class PenController: NSObject {
         penCommParser.requestSystemSetPerformance(step)
     }
     
+    
     // MARK: - Offline Data
     /// Offline Note List
     public func requestOfflineNoteList(){
@@ -297,8 +296,8 @@ public class PenController: NSObject {
          - deviceName: String
          - fwVersion : String
      */
-    public func UpdateFirmware(_ data: Data,_ deviceName: String,_ fwVersion : String) {
-        return penCommParser.updateFirmwareFirst(data, deviceName, fwVersion, true)
+    public func UpdateFirmware(_ data: Data,_ deviceName: String,_ fwVersion : String, isCompress: Bool) {
+        return penCommParser.updateFirmwareFirst(data, deviceName, fwVersion, isCompress)
     }
     
     /// Firemware Upate Cancel

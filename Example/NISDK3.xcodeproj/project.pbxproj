@@ -13,11 +13,11 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		F63743F42946B9DD008ACAA3 /* PenFWUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E0D36252D836200587CD4 /* PenFWUpdateViewController.swift */; };
 		F63E0D27252D831A00587CD4 /* PenSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E0D26252D831A00587CD4 /* PenSearchViewController.swift */; };
 		F63E0D2B252D832A00587CD4 /* PenSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E0D2A252D832A00587CD4 /* PenSettingViewController.swift */; };
 		F63E0D2F252D834300587CD4 /* PenPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E0D2E252D834300587CD4 /* PenPickerViewController.swift */; };
 		F63E0D33252D835300587CD4 /* PenOfflineNoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E0D32252D835300587CD4 /* PenOfflineNoteViewController.swift */; };
-		F63E0D37252D836200587CD4 /* PenFWUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E0D36252D836200587CD4 /* PenFWUpdateViewController.swift */; };
 		F63E0D3C252D837D00587CD4 /* PageStrokeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E0D3B252D837D00587CD4 /* PageStrokeView.swift */; };
 		F63E0D40252D838700587CD4 /* RenderStrokeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E0D3F252D838700587CD4 /* RenderStrokeView.swift */; };
 		F63E0D44252D839200587CD4 /* PageSymbolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63E0D43252D839200587CD4 /* PageSymbolView.swift */; };
@@ -361,10 +361,10 @@
 				F63E0D2B252D832A00587CD4 /* PenSettingViewController.swift in Sources */,
 				F63E0D4A252D83C500587CD4 /* ActivityIndicator.swift in Sources */,
 				F694ED2B253D66F800E1F931 /* SymbolData.swift in Sources */,
+				F63743F42946B9DD008ACAA3 /* PenFWUpdateViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* MainViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				F6A08876253E550600289FA6 /* ScaleHelper.swift in Sources */,
-				F63E0D37252D836200587CD4 /* PenFWUpdateViewController.swift in Sources */,
 				F63E0D2F252D834300587CD4 /* PenPickerViewController.swift in Sources */,
 				F63E0D3C252D837D00587CD4 /* PageStrokeView.swift in Sources */,
 			);

@@ -9,8 +9,6 @@
 import UIKit
 import NISDK3
 
-
-
 enum NetworkError: Error {
     case domainError
     case decodingError
@@ -23,9 +21,8 @@ enum NetworkError: Error {
         }
     }
 }
-
 class PenFWUpdateViewController: UIViewController {
-
+    
     static func instance() -> PenFWUpdateViewController {
         let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PenFWUpdateViewController") as! PenFWUpdateViewController
         return vc
@@ -43,6 +40,8 @@ class PenFWUpdateViewController: UIViewController {
     var fwServerLoc = ""
     let kURL_NEOLAB_FW20: String = "http://one.neolab.kr/resource/fw20"
     let kURL_NEOLAB_FW20_JSON: String = "/firmware_all_3.json"
+    // Device model [NWP-F53, NWP-F63, NWP-F151] is not support compress
+    private let compressNotSupportModels: [String] = ["NWP-F53", "NWP-F63", "NWP-F151"]
     
     
     override func viewDidLoad() {
@@ -66,7 +65,7 @@ class PenFWUpdateViewController: UIViewController {
                 DispatchQueue.main.async {
                     if (self?.penFWVersion ?? "").compare((self?.fwServerVer ?? ""),options: []).rawValue == -1{
                         self?.fwUpdateBtn.isEnabled = true
-
+                        
                         self?.fwUpdateBtn.setTitle("Firmware update exist.", for: .normal)
                     }else{
                         self?.fwUpdateBtn.setTitle("Firmware update not exist.", for: .normal)
@@ -80,7 +79,7 @@ class PenFWUpdateViewController: UIViewController {
             }
             
         })
-
+        
         PenHelper.shared.penFWUpgradePerDelegate = { [weak self] per in
             DispatchQueue.main.async {
                 let numberFormatter = NumberFormatter()
@@ -139,7 +138,7 @@ class PenFWUpdateViewController: UIViewController {
             
             guard let data = data, error == nil else {
                 if let error = error as NSError?, error.domain == NSURLErrorDomain {
-                        completion(.failure(.domainError))
+                    completion(.failure(.domainError))
                 }
                 return
             }
@@ -173,19 +172,15 @@ class PenFWUpdateViewController: UIViewController {
         let session = URLSession(configuration: sessionConfig)
         let urlStr: String = "\(kURL_NEOLAB_FW20)\(self.fwServerLoc)"
         
-        //TODO: File exist
         let documentsDirectoryPath = URL(fileURLWithPath: NSTemporaryDirectory())
         let fileURL: URL = documentsDirectoryPath.appendingPathComponent("NEO1Temp.v")
         if FileManager.default.fileExists(atPath: fileURL.path) {
             do {
-                let data = try Data(contentsOf: fileURL)
-                PenHelper.shared.pen?.UpdateFirmware(data, self.deviceName, self.fwServerVer)
-            }catch {
-                print("File is nil")
+                try FileManager.default.removeItem(atPath: fileURL.path)
+                print("Remove exist f/w success")
+            } catch {
+                print("Remove exist f/w fail... error: \(error)")
             }
-            return
-        }else {
-            print("FileDownload Start")
         }
         
         let urlRequest = URLRequest(url: URL(string: urlStr)!)
@@ -201,8 +196,16 @@ class PenFWUpdateViewController: UIViewController {
                     let fileURL: URL = documentsDirectoryPath.appendingPathComponent("NEO1Temp.v")
                     try FileManager.default.copyItem(at: tempLocalUrl, to: fileURL)
                     let data = try Data(contentsOf: fileURL)
-
-                    PenHelper.shared.pen?.UpdateFirmware(data, self.deviceName, self.fwServerVer)
+                    
+                    let isCompress: Bool = {
+                        if self.compressNotSupportModels.contains(where: { $0 == self.deviceName }) {
+                            return false
+                        } else {
+                            return true
+                        }
+                    }()
+                    
+                    PenHelper.shared.pen?.UpdateFirmware(data, self.deviceName, self.fwServerVer, isCompress: isCompress)
                     
                 } catch (let writeError) {
                     print("error writing file : \(writeError)")
@@ -214,7 +217,7 @@ class PenFWUpdateViewController: UIViewController {
         }
         task.resume()
     }
-
+    
     @IBAction func fwUpdateBtnClicked(_ sender: UIButton) {
         if sender.tag == 1{
             self.perView.isHidden = false
@@ -234,3 +237,4 @@ class PenFWUpdateViewController: UIViewController {
         self.perView.isHidden = true
     }
 }
+

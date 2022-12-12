@@ -2,20 +2,16 @@
 //  PenCommParser.swift
 //  NISDK3
 //
-//  Created by Aram Moon on 2017. 6. 8..
-//  Editted by SB KIM on 2020.10.22
 //  Copyright © 2017년 NeoLab. All rights reserved.
 //
 
 import Foundation
 #if os(iOS) || os(watchOS) || os(tvOS)
 import UIKit
-
 #elseif os(macOS)
 import AppKit
 #else
 #endif
-
 class PenCommParser {
     
     weak var penDelegate: PenDelegate?
@@ -100,6 +96,7 @@ class PenCommParser {
             N.Log("CMD Error")
             return
         }
+        
         if penDelegate == nil {
             N.Log("Need to set Delegate")
         }
@@ -173,7 +170,6 @@ class PenCommParser {
                 return
             }
             let hover = DotHover.init(Array(data[pos..<pos+packetDataLength]))
-            
             var dot = Dot.init(hover: hover)
             if let page = currentPage {
                 dot.pageInfo = page
@@ -514,7 +510,7 @@ class PenCommParser {
             maxForce = Float(penState.maxPressure)
             // MARK: PenInfo save
             penCtrl.penSetting = penState
-            if penState.lock == PenSettingStruct.Lock.Lock { //Todo. BT ID 비교
+            if penState.lock == PenSettingStruct.Lock.Lock {
                 let pensetting = PenMessage.PEN_SETTING_INFO(penState)
                 penDelegate?.penMessage(penCtrl, pensetting)
                 
@@ -841,8 +837,7 @@ class PenCommParser {
         N.Log("Req setPenState 0x5 data \(data)")
         penCtrl.writePenSetData(data)
     }
-    /// [10]
-    /// [11]
+    
     /// [12]
     func requestSetPenLocalname(_ name: String) {
         let request = REQ.PenStatus.init(.LocalName, name)
@@ -961,14 +956,17 @@ class PenCommParser {
         
         if (fileOffset + UPDATE2_DATA_PACKET_SIZE) > UInt32(fwFile.count) {
             request.sizeBeforeZip = UInt32(UInt32(fwFile.count) - fileOffset)
-        }
-        else {
+        } else {
             request.sizeBeforeZip = UInt32(UPDATE2_DATA_PACKET_SIZE)
         }
         
         let dividedData = Array(fwFile[Int(fileOffset)..<Int(fileOffset+request.sizeBeforeZip)])
         request.nChecksum = checkSumCalculate(dividedData)
         request.fileOffset = fileOffset
+        print("FW second dvidedData: \(dividedData.count), fileOffset: \(fileOffset)")
+        
+        var requestLength: UInt32 = 0
+        
         if (isZip) {
             let (zipFileData, error) = CompressUtil().zip(dividedData)
             if error != nil {
@@ -977,9 +975,12 @@ class PenCommParser {
             
             request.fileData = zipFileData
             request.sizeAfterZip = UInt32(zipFileData.count)
-        }else{
+            requestLength = UInt32(zipFileData.count)
+        } else{
             request.fileData = dividedData
-            request.sizeAfterZip = UInt32(dividedData.count)
+            // 압축 하지 않을 경우에는 압축 후 크기를 반드시 0으로 보내야 함
+            request.sizeAfterZip = 0
+            requestLength = UInt32(dividedData.count)
         }
 
         if status == 3 {
@@ -988,25 +989,25 @@ class PenCommParser {
             let msg = PenMessage.PEN_FW_UPGRADE_FAILURE
             penDelegate?.penMessage(penCtrl, msg)
             
-        }else if status == 2 {
+        } else if status == 2 {
             request.error = 0
             let msg = PenMessage.PEN_FW_UPGRADE_SUCCESS
             penDelegate?.penMessage(penCtrl, msg)
-        }else {
+        } else {
             request.error = 0
         }
-        request.length = UInt16(request.sizeAfterZip + 14)
+        request.length = UInt16(requestLength) + 14
+        
         //0: continue, 1: stop
         if !cancelFWUpdate {
             request.transContinue = 0
-        }
-        else {
+        } else {
             request.transContinue = 1
         }
         
         let data = request.toUInt8Array().toData()
         
-//        N.Log("Req updateFirmwareSecond 0xB2 data \(data)")
+        N.Log("Req updateFirmwareSecond 0xB2 data \(data)")
         //        N.Log("Req",request)
         
         penCtrl.writePenSetData(data)
@@ -1075,7 +1076,6 @@ class PenCommParser {
         N.Log("Req System Change 0x06")
         penCtrl.writePenSetData(data)
     }
-    
     
     //MARK: - Sound SDK
     func requestLogInfo(_ compressed: REQ.LogInfo.Compressed) {
