@@ -652,6 +652,9 @@ extension PenController: CBPeripheralDelegate {
             return
         }
         let packet = [UInt8](received_data)
+        /*
+         Log packet[1] causes crash if packet's count less than or equal to 1.
+         */
 //        N.Log("Pen Data", packet[1], CMD(rawValue: packet[1]))
         switch characteristic.uuid {
         case NEOLAB.PEN_CHARACTERISTICS_NOTIFICATION_UUID:
