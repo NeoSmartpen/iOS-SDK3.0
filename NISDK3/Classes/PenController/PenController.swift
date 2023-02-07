@@ -296,8 +296,18 @@ public class PenController: NSObject {
          - deviceName: String
          - fwVersion : String
      */
-    public func UpdateFirmware(_ data: Data,_ deviceName: String,_ fwVersion : String, isCompress: Bool) {
-        return penCommParser.updateFirmwareFirst(data, deviceName, fwVersion, isCompress)
+    public func UpdateFirmware(_ data: Data,_ deviceName: String,_ fwVersion : String, isCompress: Bool = true) {
+        // Device model [NWP-F53, NWP-F63, NWP-F151] is not support compress
+        let fwUpdateCompressNotSupportModels: [String] = ["NWP-F53", "NWP-F63", "NWP-F151"]
+        let isSupportCompress: Bool = {
+            if fwUpdateCompressNotSupportModels.contains(where: { $0 == deviceName }) {
+                return false
+            } else {
+                return true
+            }
+        }()
+        
+        return penCommParser.updateFirmwareFirst(data, deviceName, fwVersion, isSupportCompress)
     }
     
     /// Firemware Upate Cancel

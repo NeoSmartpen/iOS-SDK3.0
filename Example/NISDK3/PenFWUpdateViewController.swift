@@ -40,10 +40,7 @@ class PenFWUpdateViewController: UIViewController {
     var fwServerLoc = ""
     let kURL_NEOLAB_FW20: String = "http://one.neolab.kr/resource/fw20"
     let kURL_NEOLAB_FW20_JSON: String = "/firmware_all_3.json"
-    // Device model [NWP-F53, NWP-F63, NWP-F151] is not support compress
-    private let compressNotSupportModels: [String] = ["NWP-F53", "NWP-F63", "NWP-F151"]
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -197,15 +194,7 @@ class PenFWUpdateViewController: UIViewController {
                     try FileManager.default.copyItem(at: tempLocalUrl, to: fileURL)
                     let data = try Data(contentsOf: fileURL)
                     
-                    let isCompress: Bool = {
-                        if self.compressNotSupportModels.contains(where: { $0 == self.deviceName }) {
-                            return false
-                        } else {
-                            return true
-                        }
-                    }()
-                    
-                    PenHelper.shared.pen?.UpdateFirmware(data, self.deviceName, self.fwServerVer, isCompress: isCompress)
+                    PenHelper.shared.pen?.UpdateFirmware(data, self.deviceName, self.fwServerVer)
                     
                 } catch (let writeError) {
                     print("error writing file : \(writeError)")
