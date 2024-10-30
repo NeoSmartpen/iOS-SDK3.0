@@ -40,6 +40,9 @@ class PenCommParser {
     //Firmware Updata
     var fwFile: [UInt8] = []
     private let UPDATE2_DATA_PACKET_SIZE: UInt32 = 2048
+    private let UPDATE2_DATA_PACKET_SIZE_128: UInt32 = 128
+    private var deviceNameForFWUpdate: String?
+    
     var cancelFWUpdate = false
     private var isZip = false
     
@@ -934,6 +937,20 @@ class PenCommParser {
         penDelegate?.penMessage(penCtrl, msg)
     }
     
+    static func isFWUpdatePacketSize128(deviceName: String) -> Bool {
+        
+        let fwPacketSize128: [String] = ["NSP-D100", "NSP-D101", "NSP-C200"]
+        let isFWPacketSize128: Bool = {
+            if fwPacketSize128.contains(where: { $0 == deviceName }) {
+                return true
+            } else {
+                return false
+            }
+        }()
+        
+        return isFWPacketSize128
+    }
+    
     // MARK: Firmware Update
     func updateFirmwareFirst(_ data: Data, _ deviceName: String, _ fwVersion: String,_ compress: Bool) {
         var request = REQ.FWUpdateFirst()
@@ -941,7 +958,11 @@ class PenCommParser {
         request.fwVer = fwVersion.toUInt8Array16()
         fwFile = Array(data)
         request.fileSize = UInt32(fwFile.count)
-        request.packetSize = UPDATE2_DATA_PACKET_SIZE
+        
+        // update deviceName state to later use it in updateFirmwareSecond
+        deviceNameForFWUpdate = deviceName
+        let packetSize = PenCommParser.isFWUpdatePacketSize128(deviceName: deviceName) ? UPDATE2_DATA_PACKET_SIZE_128 : UPDATE2_DATA_PACKET_SIZE
+        request.packetSize = packetSize
         request.dataZipOpt = compress ? 1: 0
         isZip = compress
         request.nCheckSum = checkSumCalculate(fwFile)
@@ -954,10 +975,17 @@ class PenCommParser {
     func updateFirmwareSecond(at fileOffset: UInt32, andStatus status: UInt8) {
         var request = REQ.FWUpdateSecond()
         
-        if (fileOffset + UPDATE2_DATA_PACKET_SIZE) > UInt32(fwFile.count) {
+        let packetSize: UInt32
+        if let deviceName = deviceNameForFWUpdate, PenCommParser.isFWUpdatePacketSize128(deviceName: deviceName) {
+            packetSize = UPDATE2_DATA_PACKET_SIZE_128
+        } else {
+            packetSize = UPDATE2_DATA_PACKET_SIZE
+        }
+        
+        if (fileOffset + packetSize) > UInt32(fwFile.count) {
             request.sizeBeforeZip = UInt32(UInt32(fwFile.count) - fileOffset)
         } else {
-            request.sizeBeforeZip = UInt32(UPDATE2_DATA_PACKET_SIZE)
+            request.sizeBeforeZip = packetSize
         }
         
         let dividedData = Array(fwFile[Int(fileOffset)..<Int(fileOffset+request.sizeBeforeZip)])

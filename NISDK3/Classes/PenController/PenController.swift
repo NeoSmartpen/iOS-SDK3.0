@@ -298,7 +298,7 @@ public class PenController: NSObject {
      */
     public func UpdateFirmware(_ data: Data,_ deviceName: String,_ fwVersion : String, isCompress: Bool = true) {
         // Device model [NWP-F53, NWP-F63, NWP-F151] is not support compress
-        let fwUpdateCompressNotSupportModels: [String] = ["NWP-F53", "NWP-F63", "NWP-F151"]
+        let fwUpdateCompressNotSupportModels: [String] = ["NWP-F53", "NWP-F63", "NWP-F151", "NWP-F45", "NWP-F53MG", "NEP-E100", "NEP-E101", "NSP-D100", "NSP-D101", "NSP-C200", "NPP-P201"]
         let isSupportCompress: Bool = {
             if fwUpdateCompressNotSupportModels.contains(where: { $0 == deviceName }) {
                 return false

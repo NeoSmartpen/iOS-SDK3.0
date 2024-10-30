@@ -1,3 +1,5 @@
+platform :ios, '11.0'
+
 use_frameworks!
 
 target 'NISDK3_Example' do
