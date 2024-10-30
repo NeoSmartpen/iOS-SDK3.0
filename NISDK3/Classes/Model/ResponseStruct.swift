@@ -402,7 +402,12 @@ public struct PenVersionInfo {
     public var mac: String = ""
     ///
     public var pressureSensorType = PressureSensorType.FSR
+    
+    public var isSupportCompress: Bool = false
+    
     static let length = 65
+    static let compressSupportProtocolVersion = 2.22
+    
     init(_ d: [UInt8]){
         guard d.count >= 64 else {
             N.Log("Data Size Error: ", type(of: self))
@@ -415,10 +420,17 @@ public struct PenVersionInfo {
         let m = toUInt16(d[56], d[57])
         deviceType = DeviceType(rawValue: m) ?? .Pen
         mac = toString(Array(d[58..<64]))
-        guard d.count == Int(PenVersionInfo.length) else {
+        guard d.count >= 65 else {
             return
         }
         pressureSensorType = PressureSensorType(rawValue: d[64]) ?? .FSR
+        
+        
+        guard let protocolVerValue = Double(protocolVer),
+              d.count >= 70, protocolVerValue >= PenVersionInfo.compressSupportProtocolVersion else {
+            return
+        }
+        isSupportCompress = d[69] == 0 ? false : true
     }
 }
 

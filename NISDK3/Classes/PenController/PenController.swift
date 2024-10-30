@@ -296,16 +296,34 @@ public class PenController: NSObject {
          - deviceName: String
          - fwVersion : String
      */
-    public func UpdateFirmware(_ data: Data,_ deviceName: String,_ fwVersion : String, isCompress: Bool = true) {
-        // Device model [NWP-F53, NWP-F63, NWP-F151] is not support compress
-        let fwUpdateCompressNotSupportModels: [String] = ["NWP-F53", "NWP-F63", "NWP-F151", "NWP-F45", "NWP-F53MG", "NEP-E100", "NEP-E101", "NSP-D100", "NSP-D101", "NSP-C200", "NPP-P201"]
-        let isSupportCompress: Bool = {
-            if fwUpdateCompressNotSupportModels.contains(where: { $0 == deviceName }) {
-                return false
-            } else {
-                return true
-            }
-        }()
+    public func UpdateFirmware(_ data: Data,_ deviceName: String,_ fwVersion : String) {
+        
+        // if protocol is lower than 2.22,
+        if let protocolVersion = penCommParser.protocolVersion,
+           Double(protocolVersion) < PenVersionInfo.compressSupportProtocolVersion {
+            
+            // Device model [NWP-F53, NWP-F63, NWP-F151] is not support compress
+            let fwUpdateCompressNotSupportModels: [String] = ["NWP-F53", "NWP-F63", "NWP-F151", "NWP-F45", "NWP-F53MG", "NEP-E100", "NEP-E101", "NSP-D100", "NSP-D101", "NSP-C200", "NPP-P201"]
+            let isSupportCompress: Bool = {
+                if fwUpdateCompressNotSupportModels.contains(where: { $0 == deviceName }) {
+                    return false
+                } else {
+                    return true
+                }
+            }()
+            
+            return penCommParser.updateFirmwareFirst(data, deviceName, fwVersion, isSupportCompress)
+        }
+        
+        
+        var isSupportCompress = true
+        
+        // if protocol version is higher than 2.22, determine based on isSupportCompress value
+        if let protocolVersion = penCommParser.protocolVersion,
+           Double(protocolVersion) >= PenVersionInfo.compressSupportProtocolVersion,
+           let penVersionInfo = penCommParser.penVersionInfo {
+            isSupportCompress = penVersionInfo.isSupportCompress
+        }
         
         return penCommParser.updateFirmwareFirst(data, deviceName, fwVersion, isSupportCompress)
     }
