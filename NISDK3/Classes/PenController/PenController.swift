@@ -297,7 +297,7 @@ public class PenController: NSObject {
          - fwVersion : String
      */
     public func UpdateFirmware(_ data: Data,_ deviceName: String,_ fwVersion : String) {
-        
+        /*
         // if protocol is lower than 2.22,
         if let protocolVersion = penCommParser.protocolVersion,
            Double(protocolVersion) < PenVersionInfo.compressSupportProtocolVersion {
@@ -326,6 +326,8 @@ public class PenController: NSObject {
         }
         
         return penCommParser.updateFirmwareFirst(data, deviceName, fwVersion, isSupportCompress)
+         */
+        return penCommParser.updateFirmwareFirst(data, deviceName, fwVersion, false)
     }
     
     /// Firemware Upate Cancel
