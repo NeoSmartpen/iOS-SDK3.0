@@ -28,6 +28,10 @@ class PenHelper: PenDelegate{
     
     var offlinenoteDelegate: ( (_ notes: OfflineNoteList) -> ())?
     var offlinepageDelegate: ( (_ pages: OfflinePageList) -> ())?
+    
+    var offlineNoteDeleteDelegate: ( (_ errorCode: UInt8?) -> ())?
+    var offlinePageDeleteDelegate: ( (_ errorCode: UInt8?) -> ())?
+    
     //Step2 : Offline Data
     var offlinedataDelegate: ((OffLineData) -> ())?
     //Step3 : Offline Data Status
@@ -91,9 +95,18 @@ class PenHelper: PenDelegate{
         case .OFFLINE_DATA_NOTE_LIST(let notes): // 펜 오프라인 노트 리스트
             print("OFFLINE_DATA_NOTE_LIST : - msg : \(msg)")
             offlinenoteDelegate?(notes)
+        case .OFFLINE_DATA_NOTE_DELETE_RES:
+            print("OFFLINE_DATA_NOTE_DELETE_RES")
+            offlineNoteDeleteDelegate?(nil)
+            
         case .OFFLINE_DATA_PAGE_LIST(let pages): // 펜 오프라인 페이지 리스트
             print("OFFLINE_DATA_PAGE_LIST : - msg : \(msg)")
             offlinepageDelegate?(pages)
+            
+        case .OFFLINE_DATA_PAGE_DELETE_RES:
+            print("OFFLINE_DATA_PAGE_DELETE_RES")
+            offlinePageDeleteDelegate?(nil)
+            
         case .OFFLINE_DATA_SEND_START: // 펜 오프라인 데이터 보내기 시작
             print("OFFLINE_DATA_SEND_START : - msg : \(msg)")
         case .OFFLINE_DATA_SEND_STATUS(let percent): // 펜 오프라인 데이터 전송 상태
