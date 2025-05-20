@@ -1,6 +1,42 @@
 ## iOS SDK3.0
 Neo smartpen SDK(also referred to as ‘Pen SDK’) for iOS. This open-source library allows you to integrate the Neo smartpen - Neo smartpen N2, M1, M1+ and dimo - into your iOS app. 
 
+## Release Notes
+### 1.1.2
+
+**1. Rename `requestDeleteOfflineData()` function in PenController**
+
+   From:
+   ```swift
+   public func requestDeleteOfflineData(_ section: UInt8, _ owner: UInt32, _ note: [UInt32])
+   ```
+ 
+   To:
+   ```swift
+   public func requestDeleteOfflineDataNote(_ section: UInt8, _ owner: UInt32, _ note: [UInt32])
+```
+
+
+**2. Add a new function for offline page deletion in PenController**
+```swift
+public func requestDeleteOfflineDataPage(_ section: UInt8,_ owner: UInt32, _ note:UInt32, _ pageList: [UInt32])
+```
+
+**For demo of this newly-created function, please look at PenOfflineNoteViewController.swift file in the sample app.**
+
+
+### How to update the firmware to a specific version
+1. Put the update firmware file in the sample project.
+2. Add a test button on PenFWUpdateViewController’s view to run this code.
+
+```swift
+let url = Bundle.main.url(forResource: “NewFirmwareFile, withExtension: “FileExtension”)
+let data = try! Data(contentsOf: url!)
+PenHelper.shared.pen?.UpdateFirmware(data, self.deviceName, self.fwServerVer)
+```
+
+3. Run the sample app. Connect the pen. Go to ‘Pen Firmware Update’ on the side menu.
+4. Tap on the test button to run the code and wait for around one minute to complete. You should see ‘Firmware update finished. Please reconnect the pen.’ popup when the update is completed.
 
 ## About Neo smartpen
 
