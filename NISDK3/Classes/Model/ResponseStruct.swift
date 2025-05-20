@@ -570,7 +570,7 @@ public struct OfflinePageList {
     public var section: UInt8 = 0
     public var owner: UInt32 = 0
     public var note: UInt32 = 0
-    public var page: [UInt32] = []
+    public var pages: [UInt32] = []
     
     init(_ d: [UInt8]){
         guard d.count > 1 else {
@@ -589,7 +589,7 @@ public struct OfflinePageList {
         
         for _ in 0..<pageCount {
             let pageId = toUInt32(d, at: pos)
-            page.append(pageId)
+            pages.append(pageId)
             pos += 4
         }
     }
