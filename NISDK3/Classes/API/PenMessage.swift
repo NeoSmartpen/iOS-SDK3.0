@@ -94,12 +94,20 @@ public enum PenMessage {
      Off-line data stored in the pen's
      - data: [PageId : UInt32] List
      */
+    
+    case OFFLINE_DATA_NOTE_DELETE_RES
+    
+    
+    
     case OFFLINE_DATA_PAGE_LIST(OfflinePageList)
     
     /**
      The constant OFFLINE_DATA_SEND_START.
      - data: nil
      */
+    
+    case OFFLINE_DATA_PAGE_DELETE_RES
+    
     case OFFLINE_DATA_SEND_START
     
     /**

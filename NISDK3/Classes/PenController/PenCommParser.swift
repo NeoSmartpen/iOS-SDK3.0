@@ -405,8 +405,7 @@ class PenCommParser {
                     self?.penDelegate?.penMessage(penCtrl, msg)
                 }
             })
-        case .RES_DEL_OFFLINE_DATA:
-            //error code
+        case .RES_DEL_OFFLINE_DATA_NOTE:
             
             pos += 1
             packetDataLength = Int(toUInt16(data[2],data[3]))
@@ -430,6 +429,38 @@ class PenCommParser {
                     pos += 4
                 }
             }
+            
+            let msg = PenMessage.OFFLINE_DATA_NOTE_DELETE_RES
+            penDelegate?.penMessage(penCtrl, msg)
+            
+        case .RES_DEL_OFFLINE_DATA_PAGE:
+            //error code
+            pos += 1
+            packetDataLength = Int(toUInt16(data[2],data[3]))
+            
+            N.Log("Res delete offline data error code : \(data[1]), \((data[1] == 0) ? "Success" : "Fail")")
+            if (data[1] != 0) || (data.count < (packetDataLength + 4)) {
+                return
+            }
+            if data.count < packetDataLength + pos {
+                N.Log("Error packet length", cmd)
+                return
+            }
+            let pageCount = data[pos]
+            //deleted note count
+            pos += 1
+            if pageCount > 0 {
+                for _ in 0..<pageCount {
+                    
+                    let page_ID = toUInt32(data,at: pos)
+                    N.Log("page Id deleted \(page_ID)")
+                    pos += 4
+                }
+            }
+            
+            let msg = PenMessage.OFFLINE_DATA_PAGE_DELETE_RES
+            penDelegate?.penMessage(penCtrl, msg)
+            
         //MARK: - Firmware update
         case .RES1_FW_FILE:
             //error code
@@ -905,14 +936,19 @@ class PenCommParser {
         penCtrl.writePenSetData(data)
     }
     
-    func requestDeleteOfflineData(_ section: UInt8, _ owner: UInt32, _ noteList: [UInt32]) {
-        let request = REQ.DeleteOfflineData(section, owner, noteList)
+    func requestDeleteOfflineDataNote(_ section: UInt8, _ owner: UInt32, _ noteList: [UInt32]) {
+        let request = REQ.DeleteOfflineDataNote(section, owner, noteList)
         let data = request.toUInt8Array().toData()
         N.Log("Req DelOfflineFile2SectionOwnerId 0x25 data \(data)")
         penCtrl.writePenSetData(data)
     }
     
-    
+    func requestDeleteOfflineDataPage(_ section: UInt8, _ owner: UInt32, _ note: UInt32, _ pageList: [UInt32]) {
+        let request = REQ.DeleteOfflineDataPage(section, owner, note, pageList)
+        let data = request.toUInt8Array().toData()
+        N.Log("Req DelOfflineFile2SectionOwnerIdNoteId 0x27 data \(data)")
+        penCtrl.writePenSetData(data)
+    }
     
     /// Offline Parser
     func parseSDK2OfflinePenData(_ penData: [UInt8], _ offlineData: OffLineData) {

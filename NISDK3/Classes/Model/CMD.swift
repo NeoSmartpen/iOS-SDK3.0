@@ -17,7 +17,8 @@ enum CMD: UInt8 {
     case REQ2_OFFLINE_PAGE_LIST = 0x22
     case REQ1_OFFLINE_DATA = 0x23
     case REQ2_OFFLINE_DATA = 0x24
-    case REQ_DEL_OFFLINE_DATA = 0x25
+    case REQ_DEL_OFFLINE_DATA_NOTE = 0x25
+    case REQ_DEL_OFFLINE_DATA_PAGE = 0x27
     case REQ1_FW_FILE = 0x31
     case RES2_FW_FILE = 0xB2
     case REQ_PROFILE = 0x41
@@ -42,7 +43,8 @@ enum CMD: UInt8 {
     case RES2_OFFLINE_PAGE_LIST = 0xA2
     case RES1_OFFLINE_DATA_INFO = 0xA3
     case RES2_OFFLINE_DATA = 0xA4
-    case RES_DEL_OFFLINE_DATA = 0xA5
+    case RES_DEL_OFFLINE_DATA_NOTE = 0xA5
+    case RES_DEL_OFFLINE_DATA_PAGE = 0xA7
     case RES1_FW_FILE = 0xB1
     case REQ2_FW_FILE = 0x32
     case RES_PROFILE = 0xC1

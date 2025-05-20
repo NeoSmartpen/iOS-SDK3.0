@@ -357,8 +357,8 @@ struct REQ {
         }
         
     }
-    struct DeleteOfflineData: Request {
-        var cmd: UInt8 = CMD.REQ_DEL_OFFLINE_DATA.rawValue//0x25
+    struct DeleteOfflineDataNote: Request {
+        var cmd: UInt8 = CMD.REQ_DEL_OFFLINE_DATA_NOTE.rawValue//0x25
         var length: UInt16 = 0
         var sectionOwnerId: UInt32 = 0
         var noteCnt: UInt8 = 0
@@ -380,6 +380,36 @@ struct REQ {
             data.append(contentsOf: sectionOwnerId.toUInt8Array())
             data.append(noteCnt)
             data.append(contentsOf: noteListArray)
+            return data
+        }
+    }
+    
+    struct DeleteOfflineDataPage: Request {
+        var cmd: UInt8 = CMD.REQ_DEL_OFFLINE_DATA_PAGE.rawValue//0x27
+        var length: UInt16 = 0
+        var sectionOwnerId: UInt32 = 0
+        var noteId: UInt32 = 0
+        var pageCnt: UInt8 = 0
+        var pageListArray: [UInt8] = []
+        
+        init(_ section: UInt8,_ owner: UInt32,_ noteId: UInt32, _ pageList: [UInt32]){
+            pageCnt = UInt8(pageList.count)
+            length = 9 + (UInt16(pageCnt) * 4)
+            sectionOwnerId = toSectionOwner(section, owner)
+            self.noteId = noteId
+            for page in pageList{
+                self.pageListArray.append(contentsOf: page.toUInt8Array())
+            }
+        }
+        
+        func toUInt8Array() -> [UInt8]{
+            var data = [UInt8]()
+            data.append(cmd)
+            data.append(contentsOf: length.toUInt8Array())
+            data.append(contentsOf: sectionOwnerId.toUInt8Array())
+            data.append(contentsOf: noteId.toUInt8Array())
+            data.append(pageCnt)
+            data.append(contentsOf: pageListArray)
             return data
         }
     }
