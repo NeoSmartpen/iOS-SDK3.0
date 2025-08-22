@@ -2,6 +2,16 @@
 Neo smartpen SDK(also referred to as ‘Pen SDK’) for iOS. This open-source library allows you to integrate the Neo smartpen - Neo smartpen N2, M1, M1+ and dimo - into your iOS app. 
 
 ## Release Notes
+### 1.1.3
+Fix data type conversion crash issue:
+
+
+
+public var twist: UInt16
+
+
+UInt16 -> [UInt8]
+
 ### 1.1.2
 
 **1. Rename `requestDeleteOfflineData()` function in PenController**
