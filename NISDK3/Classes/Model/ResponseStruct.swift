@@ -116,7 +116,10 @@ public struct Dot: Response {
         data.append(contentsOf: y.toUInt8Array())
         data.append(xtilt)
         data.append(ytilt)
-        data.append(UInt8(twist))
+        
+        // 2025.08.22 - to fix the crash
+        data.append(contentsOf: twist.toUInt8Array())
+//        data.append(UInt8(twist))
         return data
     }
     
