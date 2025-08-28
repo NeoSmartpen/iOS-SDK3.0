@@ -39,6 +39,9 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // for testing backward compatibility quick
+//        backwardCompatibilityTestAfterVer112()
+        
         let frame = CGRect(origin: CGPoint.zero, size: scrollView.frame.size)
         drawingView = UIView(frame: frame)
         pageStrokeView = PageStrokeView(frame: frame)
@@ -221,6 +224,74 @@ class MainViewController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
+    private func backwardCompatibilityTestAfterVer112() {
+        
+        // Dot type conversion simulation
+        let packet16Twist1Byte: [UInt8] = [
+            5,          // d[0]  nTimeDelta
+            0x00, 0x02, // d[1..2]  force (LE)
+            0xD2, 0x04, // d[3..4]  x (LE)
+            0x2E, 0x16, // d[5..6]  y (LE)
+            37,         // d[7]     x fractional * 0.01
+            99,         // d[8]     y fractional * 0.01
+            100,        // d[9]     xtilt
+            80,         // d[10]    ytilt
+            0x2C, 0x00, // d[11..12] twist (LE)
+            0x00, 0x00, // d[13..14] reserved
+            0x00        // d[15] nCheckSum
+        ]
+        
+        let packet16Twist2Byte: [UInt8] = [
+            5,          // d[0]  nTimeDelta
+            0x00, 0x02, // d[1..2]  force (LE)
+            0xD2, 0x04, // d[3..4]  x (LE)
+            0x2E, 0x16, // d[5..6]  y (LE)
+            37,         // d[7]     x fractional * 0.01
+            99,         // d[8]     y fractional * 0.01
+            100,        // d[9]     xtilt
+            80,         // d[10]    ytilt
+            0x2C, 0x01, // d[11..12] twist (LE)
+            0x00, 0x00, // d[13..14] reserved
+            0x00        // d[15] nCheckSum
+        ]
+
+        let maxForce: Float = 1024 // your device max pressure
+        
+        let dot1Byte = Dot(packet16Twist1Byte, maxForce)
+        let dot2Byte = Dot(packet16Twist2Byte, maxForce)
+        
+        // test
+        // Encoded before Ver112 as 1Byte value to be decoded
+        let dotA = Dot.init(dot1Byte.toUInt8Array(isForTestingBackwardCompatibility: true))
+        let testResult1 = dot1Byte.twist == dotA.twist
+        
+        // for sanity check
+        let isOtherPropertiesPreseved = dotA.x == dot1Byte.x &&
+        dotA.y == dot1Byte.y &&
+        dotA.nTimeDelta == dot1Byte.nTimeDelta &&
+        dotA.force == dot1Byte.force &&
+        dotA.xtilt == dot1Byte.xtilt &&
+        dotA.ytilt == dot1Byte.ytilt
+        
+        // Encoded before Ver112 as 2Byte value to be decoded
+        // app crashes. Encoding itself cannot happen
+//        let dotB = Dot.init(dot2Byte.toUInt8Array(isForTestingBackwardCompatibility: true))
+//        let testResult2 = dot2Byte.twist == dotB.twist
+        
+        // Encoded after Ver112 as 1Byte value to be decoded
+        let dotC = Dot.init(dot1Byte.toUInt8Array())
+        let testResult3 = dot1Byte.twist == dotC.twist
+        
+        // Encoded after Ver112 as 2Byte value to be decoded
+        let dotD = Dot.init(dot2Byte.toUInt8Array())
+        let testResult4 = dot2Byte.twist == dotD.twist
+        
+        let isTwistSuccessful = testResult1 && testResult3 && testResult4
+        print(isTwistSuccessful)
+        
+        
+        
+    }
 }
 
 extension MainViewController: CBCentralManagerDelegate {

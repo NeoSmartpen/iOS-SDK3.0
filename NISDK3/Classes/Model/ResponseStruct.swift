@@ -89,26 +89,36 @@ public struct Dot: Response {
         }
     }
     
-    /// from Database length 16
+    /// from Database length 17
     public init(_ dbData: [UInt8]) {
-        let length = 16
+        let encodedBeforeVer112 = 16
+        let encodedAfterVer112 = 17
         let d: [UInt8] = dbData
-        guard d.count >= length else {
-            N.Log("Data Size Error: ", type(of: self))
+
+        // length can be either 16 or 17
+        guard d.count >= encodedBeforeVer112 else {
+
             return
         }
-        isValid = true
+        
+        let isBeforeVer112 = d.count == encodedBeforeVer112
+        
         nTimeDelta = d[0]
         force = toFloat(d, at: 1)
         x = toFloat(d, at: 5)
         y = toFloat(d, at: 9)
         xtilt = d[13]
         ytilt = d[14]
-        twist = UInt16(d[15])
+        
+        if isBeforeVer112 {
+            twist = UInt16(d[15])
+        } else {
+            twist = toUInt16(d[15], d[16])
+        }
     }
     
-    /// to Database length 16
-    public func toUInt8Array() -> [UInt8] {
+    /// to Database length 17
+    public func toUInt8Array(isForTestingBackwardCompatibility: Bool = false) -> [UInt8] {
         var data = [UInt8]()
         data.append(nTimeDelta)
         data.append(contentsOf: force.toUInt8Array())
@@ -117,9 +127,16 @@ public struct Dot: Response {
         data.append(xtilt)
         data.append(ytilt)
         
-        // 2025.08.22 - to fix the crash
-        data.append(contentsOf: twist.toUInt8Array())
-//        data.append(UInt8(twist))
+        // 2025.08.22 - to fix the crash where 2Byte into 1Byte wrong type conversion
+        // with this update, the encoded Dot data's length becomes 17.
+        // thus, Dot decoding must update as well.
+        // Also, consider backward compatibility for those who archived before this update
+        if isForTestingBackwardCompatibility {
+            data.append(UInt8(twist))
+        } else {
+            data.append(contentsOf: twist.toUInt8Array())
+        }
+        
         return data
     }
     
