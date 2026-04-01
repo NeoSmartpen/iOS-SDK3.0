@@ -2,6 +2,10 @@
 Neo smartpen SDK(also referred to as ‘Pen SDK’) for iOS. This open-source library allows you to integrate the Neo smartpen - Neo smartpen N2, M1, M1+ and dimo - into your iOS app. 
 
 ## Release Notes
+
+### 1.1.5
+add exception to setting pen-pressure-sensitivity for FSC sensor type
+
 ### 1.1.4
 update Dot encoding decoding to complete missing part in 1.1.2 update
 
