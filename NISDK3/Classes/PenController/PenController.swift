@@ -216,12 +216,16 @@ public class PenController: NSObject {
         penCommParser.requestSetPenLEDColor(color)
     }
 
-    /// Pen Pressuer Sensor Sensitivity: 0(max) ~ 4
-    public func requestSetPenPressStep(_ step: UInt8) {
+    /// Pen Pressure Sensor Sensitivity: FSR: 0(max) ~ 4 FSC: 0 ~ 100
+    /// Note: If the FSC sensitivity value is 255, it means the setting cannot be configured and throws error
+    public func requestSetPenPressStep(_ step: UInt8) throws {
         if let peninfo = penCommParser.penVersionInfo {
             if peninfo.pressureSensorType == .FSR {
                 penCommParser.requestSetPenFSRStep(step)
             }else if peninfo.pressureSensorType == .FSC {
+                if penSetting?.penPressure == 255 {
+                    throw PenSettingError.CannotSetPenPress
+                }
                 penCommParser.requestSetPenFSCStep(step)
             }else {
                 N.Log("Not support Pressure Sensor Type")
